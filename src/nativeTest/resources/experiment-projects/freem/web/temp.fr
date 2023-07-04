@@ -2,4 +2,4 @@ private package freem.web
 
 // def <identifier>? <pattern> = <content>
 
-def HTMLElement /<{tag: Identifier}>({child: HTMLElement | StringContent})</{@tag}>/ = createElement(tag.toString())
+def HTMLElement /<{tag: Identifier}>{children: HTMLElement | StringContent}*</{@tag}>/ = createElement(tag.toString())

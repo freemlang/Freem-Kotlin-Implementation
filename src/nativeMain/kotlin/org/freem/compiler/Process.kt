@@ -13,6 +13,9 @@ object Process {
     val argv: Array<String> = Array(__argc) { index -> __argv!![index]!!.toKString() }
     val argv0: String = argv[0]
     val args: Array<String> = argv.drop(1).toTypedArray()
-    val execPath: String get() = argv0
-    val execName: String = execPath.toPath().name
+    object exec {
+        val path: String = argv0
+        val dir: String = argv0.substringBeforeLast('\\')
+        val name: String = argv0.substringAfterLast('\\')
+    }
 }
