@@ -1,7 +1,6 @@
 package org.freem.compiler.frontend
 
-import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.*
 import kotlinx.cli.*
 import okio.*
 import okio.Path.Companion.toPath
@@ -34,8 +33,6 @@ object CompileConfig {
         val targetDirPath = targetDir.toPath()
         val files = FileSystem.SYSTEM.listRecursively(if (FileSystem.SYSTEM.metadataOrNull(targetDirPath)?.isDirectory == true) targetDirPath else Process.execDir.toPath())
 
-
-        
 //        val input by parser.option(ArgType.String, shortName = "i", description = "Input file").required()
 //        val output by parser.option(ArgType.String, shortName = "o", description = "Output file name")
 //        val format by parser.option(ArgType.Choice<Format>(), shortName = "f",
