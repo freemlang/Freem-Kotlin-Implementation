@@ -18,20 +18,22 @@ import kotlin.system.measureNanoTime
 object CompileConfig {
     val compileConfigName: String = "frconfig.json"
 
-    val targetPath: String
+    val targetDir: String
 
     init {
-        val parser = ArgParser(Process.exec.name.substringAfterLast('.'))
+        val parser = ArgParser(Process.execName.substringAfterLast('.'))
         val targetDir by parser.option(
             type = ArgType.String,
             fullName = "target",
             shortName = "t",
             description = "An path for target to compile"
-        ).default(Process.exec.dir)
+        ).default(Process.execDir)
 
+        parser.parse(Process.args)
 
-        val files = FileSystem.SYSTEM.listRecursively(if (FileSystem.SYSTEM.metadata(targetPath.toPath()).isDirectory) targetPath.toPath())
-        FileSystem.SYSTEM.metadataOrNull(targetPath.toPath())?.is
+        val targetDirPath = targetDir.toPath()
+        val files = FileSystem.SYSTEM.listRecursively(if (FileSystem.SYSTEM.metadataOrNull(targetDirPath)?.isDirectory == true) targetDirPath else Process.execDir.toPath())
+
 
         
 //        val input by parser.option(ArgType.String, shortName = "i", description = "Input file").required()
@@ -43,20 +45,15 @@ object CompileConfig {
 //        val debug by parser.option(ArgType.Boolean, shortName = "d", description = "Turn on debug mode").default(false)
 //        val eps by parser.option(ArgType.Double, description = "Observational error").default(0.01)
 
-        parser.parse(Process.args)
 
-        this.targetPath = targetPath
+        this.targetDir = targetDir
 
-        println(targetPath)
+        println(targetDir)
     }
 }
 
 fun run() {
     CompileConfig
-
-    println("argv: [${Process.argv.joinToString(", ")}]")
-    println("execPath: ${Process.exec.path}")
-    println("execName: ${Process.exec.name}")
 
 //    val targetPath = "C:\\Users\\phill\\Workspace\\Development\\freem-compiler\\src\\nativeTest\\resources\\experiment-projects\\test\\test.fr".toPath()
 //    val reader = FileSystem.SYSTEM.source(targetPath).buffer().buffer
@@ -66,33 +63,6 @@ fun run() {
 //    }
 
 //    FileSystem.SYSTEM.openReadOnly("".toPath())
-
-
-//    val sourceFiles: List<File> = run {
-//        fun flat(dir: File): List<File> {
-//            return dir.listFiles()?.flatMap {
-//                if (it.isDirectory) flat(it)
-//                else if (it.path.endsWith(".fr")) listOf(File(it.path))
-//                else emptyList()
-//            } ?: emptyList()
-//        }
-//        flat(File(executionPath))
-//    }
-//    sourceFiles.forEach(::println)
-//    println()
-//
-//    val testFile = File("src/test/resources/sample-code.fr")
-//
-//    val iterator = testFile.iterator()
-//
-//
-//
-//    println()
-//
-//    val packages: List<String>
-//    sourceFiles.forEach {
-//        val buffReader = it.bufferedReader()
-//    }
 
 }
 
