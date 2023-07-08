@@ -2,3 +2,5 @@
 # Freem Compiler
 
 The Compiler for Freem Programming Language
+
+This project is deprecated
