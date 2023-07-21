@@ -1,56 +1,7 @@
 package org.freem.compiler.frontend
 
-import kotlinx.cinterop.*
-import kotlinx.cli.*
-import okio.*
-import okio.Path.Companion.toPath
-import org.freem.compiler.Process
-import platform.posix.sleep
-import kotlin.system.measureNanoTime
-
-//
-// pre implement code
-//
-
-@OptIn(ExperimentalForeignApi::class)fun main()=measureNanoTime(::run).let{memScoped{sleep(1u)};println("elapsed: ${it/1000000}ms($it)")}
-
-object CompileConfig {
-    val compileConfigName: String = "frconfig.json"
-
-    val targetDir: String
-
-    init {
-        val parser = ArgParser(Process.execName.substringAfterLast('.'))
-        val targetDir by parser.option(
-            type = ArgType.String,
-            fullName = "target",
-            shortName = "t",
-            description = "An path for target to compile"
-        ).default(Process.execDir)
-
-        parser.parse(Process.args)
-
-        val targetDirPath = targetDir.toPath()
-        val files = FileSystem.SYSTEM.listRecursively(if (FileSystem.SYSTEM.metadataOrNull(targetDirPath)?.isDirectory == true) targetDirPath else Process.execDir.toPath())
-
-//        val input by parser.option(ArgType.String, shortName = "i", description = "Input file").required()
-//        val output by parser.option(ArgType.String, shortName = "o", description = "Output file name")
-//        val format by parser.option(ArgType.Choice<Format>(), shortName = "f",
-//            description = "Format for output file").default(Format.CSV).multiple()
-//        val stringFormat by parser.option(ArgType.Choice(listOf("html", "csv", "pdf"), { it }), shortName = "sf",
-//            description = "Format as string for output file").default("csv").multiple()
-//        val debug by parser.option(ArgType.Boolean, shortName = "d", description = "Turn on debug mode").default(false)
-//        val eps by parser.option(ArgType.Double, description = "Observational error").default(0.01)
-
-
-        this.targetDir = targetDir
-
-        println(targetDir)
-    }
-}
-
 fun run() {
-    CompileConfig
+
 
 //    val targetPath = "C:\\Users\\phill\\Workspace\\Development\\freem-compiler\\src\\nativeTest\\resources\\experiment-projects\\test\\test.fr".toPath()
 //    val reader = FileSystem.SYSTEM.source(targetPath).buffer().buffer

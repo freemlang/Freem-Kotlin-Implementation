@@ -1,8 +1,6 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests
-
 plugins {
-    kotlin("multiplatform") version "1.9.0-RC"
-    kotlin("plugin.serialization") version "1.9.0-RC"
+    kotlin("multiplatform") version "1.9.0"
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 group = "org.freem"
@@ -13,8 +11,8 @@ repositories {
 }
 
 kotlin {
-    val hostOs: String = System.getProperty("os.name")
-    val nativeTarget: KotlinNativeTargetWithHostTests = when {
+    val hostOs = System.getProperty("os.name")
+    val nativeTarget = when {
         hostOs == "Mac OS X" -> macosX64("native")
         hostOs == "Linux" -> linuxX64("native")
         hostOs.startsWith("Windows") -> mingwX64("native")
@@ -22,9 +20,26 @@ kotlin {
     }
 
     nativeTarget.apply {
+        compilations.getByName("main") {
+            cinterops {
+                val llvm by creating {
+                    defFile(project.file("src/nativeInterop/cinterop/llvm.def"))
+                    packageName("llvm")
+                    compilerOpts("-Isrc/nativeInterop/cinterop/llvm-16.0.6.src/include")
+                    linkerOpts("-Lsrc/nativeInterop/cinterop/llvm-16.0.6.src/lib")
+                    includeDirs.allHeaders("src/nativeInterop/cinterop/llvm-16.0.6.src/include")
+                }
+            }
+        }
+
         binaries {
             executable("frc") {
-                entryPoint = "org.freem.compiler.frontend.main"
+                entryPoint = "org.freem.cli.frc"
+                outputDirectory = File("bin")
+            }
+            executable("fpm") {
+                entryPoint = "org.freem.cli.fpm"
+                outputDirectory = File("bin")
             }
         }
     }
@@ -36,6 +51,7 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-okio:1.5.1")
                 implementation("com.squareup.okio:okio:3.3.0")
             }
         }

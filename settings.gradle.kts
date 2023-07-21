@@ -1,3 +1,3 @@
 
-rootProject.name = "freem-compiler"
+rootProject.name = "freem"
 

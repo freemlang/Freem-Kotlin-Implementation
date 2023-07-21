@@ -1,14 +1,5 @@
 package org.freem.compiler.util
 
-inline fun Boolean.then(block: () -> Unit) = run { if (this) block(); this }
-inline fun Boolean.but(block: () -> Unit) = !this.then(block)
-/*
-inline fun <T> T?.safe(block: T.() -> Unit) =
-    this?.also {
-        it.run(block)
-    }
-*/
-inline fun <T> T?.safe(block: (T) -> Boolean) = (this != null).then { block(this!!) }
 inline infix fun <T, R> T.pipe(function: (T) -> R) = function(this)
 fun Boolean.toBoolean(): Boolean = this
 fun Boolean.toByte(): Byte = if (this) 1 else 0
