@@ -1,4 +1,4 @@
-package org.freem.compiler.util
+package org.freem.tools
 
 inline infix fun <T, R> T.pipe(function: (T) -> R) = function(this)
 fun Boolean.toBoolean(): Boolean = this

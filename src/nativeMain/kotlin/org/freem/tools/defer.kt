@@ -1,4 +1,4 @@
-package org.freem.compiler.util
+package org.freem.tools
 
 fun deferBlock(block: DeferArea.() -> Unit) {
     val defer = DeferBlock()

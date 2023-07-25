@@ -4,14 +4,14 @@ import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default
 import org.freem.Process
-import org.freem.compiler.util.deferBlock
+import org.freem.tools.deferBlock
 import kotlin.time.TimeSource
 
 fun frc() = deferBlock {
     val mark = TimeSource.Monotonic.markNow()
     defer {
         val elapsed = mark.elapsedNow()
-        println("\nuptime: ${elapsed.inWholeMilliseconds}ms(${elapsed.inWholeMicroseconds}μs)")
+        println("\nuptime: ${elapsed.inWholeSeconds}s ${elapsed.inWholeMilliseconds}ms ${elapsed.inWholeMicroseconds}μs")
     }
 }
 
