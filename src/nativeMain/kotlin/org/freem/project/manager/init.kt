@@ -7,13 +7,11 @@ import platform.posix.printf
 import platform.posix.scanf
 import platform.posix.stdout
 import platform.windows.*
+import kotlin.native.internal.isPermanent
 
 @OptIn(ExperimentalCli::class, ExperimentalForeignApi::class)
 object InitCommand: Subcommand(name = "init", actionDescription = "Initialize project") {
     override fun execute() {
-
-        print("yeongjae babo: ")
-
         memScoped {
             fun getStdHandle(nStdHandle: DWORD): HANDLE {
                 val handle = GetStdHandle(nStdHandle)
@@ -47,26 +45,27 @@ object InitCommand: Subcommand(name = "init", actionDescription = "Initialize pr
                         .filter { it.EventType.toInt() == KEY_EVENT }
                         .map { it.Event.KeyEvent }
 
-                    keyEvents.forEach { keyEvent ->
+                    for (keyEvent in keyEvents) {
                         if (keyEvent.bKeyDown == TRUE) {
-                            when (keyEvent.wVirtualKeyCode.toInt()) {
-                                VK_ESCAPE -> return
+                            val char = keyEvent.uChar.UnicodeChar.toInt().toChar()
+                            if (char.isISOControl()) input.append(char)
+                            else when (keyEvent.wVirtualKeyCode.toInt()) {
+                                VK_ESCAPE, VK_RETURN -> break
                                 VK_BACK -> {
                                     val dwCurrPos = alloc<CONSOLE_SCREEN_BUFFER_INFO>
                                     { GetConsoleScreenBufferInfo(outputHandle, this.ptr) }.dwCursorPosition
 
                                 }
-                                VK_DELETE -> {
-
-                                }
-                                VK_RETURN -> {
-                                    return@memScoped
-                                }
+                                VK_DELETE -> {}
+                                VK_INSERT -> {}
+                                VK_HOME -> {}
+                                VK_END -> {}
+                                VK_TAB -> {}
+                                VK_UP -> {}
+                                VK_DOWN -> {}
+                                VK_LEFT -> {}
+                                VK_RIGHT -> {}
                             }
-
-                            val charCode = keyEvent.uChar.UnicodeChar.toInt()
-                            val char = charCode.toChar()
-                            input.append(char)
                         }
                     }
 
