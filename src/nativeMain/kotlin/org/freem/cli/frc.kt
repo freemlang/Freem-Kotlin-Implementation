@@ -30,8 +30,6 @@ object CompileConfig {
     init {
         parser.parse(Process.args)
 
-
-
         //val fs = FileSystem.SYSTEM
         //val files = fs.listRecursively(if (fs.metadataOrNull(targetDirPath)?.isDirectory == true) targetDirPath else throw FileNotFoundException(""))
     }

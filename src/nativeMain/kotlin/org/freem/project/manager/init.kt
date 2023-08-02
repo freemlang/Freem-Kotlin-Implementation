@@ -1,17 +1,19 @@
 package org.freem.project.manager
 
 import kotlinx.cinterop.*
+import kotlinx.cinterop.internal.CCall
+import kotlinx.cinterop.internal.ConstantValue
 import kotlinx.cli.ExperimentalCli
 import kotlinx.cli.Subcommand
-import platform.posix.printf
 import platform.posix.scanf
-import platform.posix.stdout
 import platform.windows.*
-import kotlin.native.internal.isPermanent
 
 @OptIn(ExperimentalCli::class, ExperimentalForeignApi::class)
 object InitCommand: Subcommand(name = "init", actionDescription = "Initialize project") {
     override fun execute() {
+
+
+        /*
         memScoped {
             fun getStdHandle(nStdHandle: DWORD): HANDLE {
                 val handle = GetStdHandle(nStdHandle)
@@ -33,55 +35,68 @@ object InitCommand: Subcommand(name = "init", actionDescription = "Initialize pr
             )
             SetConsoleMode(inputHandle, consoleFlags.fold(0u) { result, flag -> result or flag.toUInt() })
 
-            val input = StringBuilder()
-
             try {
                 val bufferSize = 128
                 val inputBuffer = allocArray<INPUT_RECORD>(bufferSize)
-                while (true) {
-                    val numEvents = alloc<DWORDVar>()
-                    ReadConsoleInputW(inputHandle, inputBuffer, bufferSize.toUInt(), numEvents.ptr)
-                    val keyEvents = Array(numEvents.value.toInt()) { inputBuffer[it] }
+
+                val startPos = alloc<CONSOLE_SCREEN_BUFFER_INFO> { GetConsoleScreenBufferInfo(outputHandle, this.ptr) }.dwCursorPosition
+                val currentPos = alloc<CONSOLE_SCREEN_BUFFER_INFO> { GetConsoleScreenBufferInfo(outputHandle, this.ptr) }.dwCursorPosition
+
+                var loop = true
+
+                val input = mutableListOf<CHAR>()
+
+                var index = 0
+                while (loop) {
+                    val inputAmount = alloc<DWORDVar>()
+                    ReadConsoleInputW(inputHandle, inputBuffer, bufferSize.toUInt(), inputAmount.ptr)
+                    val keyEvents = Array(inputAmount.value.toInt()) { inputBuffer[it] }
                         .filter { it.EventType.toInt() == KEY_EVENT }
                         .map { it.Event.KeyEvent }
 
                     for (keyEvent in keyEvents) {
                         if (keyEvent.bKeyDown == TRUE) {
                             val char = keyEvent.uChar.UnicodeChar.toInt().toChar()
-                            if (char.isISOControl()) input.append(char)
+                            if (!char.isISOControl()) {
+                                input.add(currentPos.X.toInt(), char)
+                                currentPos.X = (currentPos.X + 1).toShort()
+                            }
                             else when (keyEvent.wVirtualKeyCode.toInt()) {
-                                VK_ESCAPE, VK_RETURN -> break
+                                VK_ESCAPE, VK_RETURN -> loop = false
                                 VK_BACK -> {
-                                    val dwCurrPos = alloc<CONSOLE_SCREEN_BUFFER_INFO>
-                                    { GetConsoleScreenBufferInfo(outputHandle, this.ptr) }.dwCursorPosition
+                                    val index = currentPos.X - startPos.X - 1
+                                    if (index >= 0) {
+                                        input.removeAt(index)
+                                        currentPos.X = (currentPos.X - 1).toShort()
+                                    }
+                                }
+                                VK_DELETE -> {
 
                                 }
-                                VK_DELETE -> {}
                                 VK_INSERT -> {}
                                 VK_HOME -> {}
                                 VK_END -> {}
                                 VK_TAB -> {}
                                 VK_UP -> {}
                                 VK_DOWN -> {}
-                                VK_LEFT -> {}
-                                VK_RIGHT -> {}
+                                VK_LEFT -> if (currentPos.X - startPos.X > 0) currentPos.X = (currentPos.X - 1).toShort()
+                                VK_RIGHT -> {
+                                    if (currentPos.X - startPos.X < input.size) currentPos.X = (currentPos.X + 1).toShort()
+                                }
                             }
                         }
                     }
-
-                    val pos = alloc<COORD> {
-                        val dwCurrPos = alloc<CONSOLE_SCREEN_BUFFER_INFO>
-                        { GetConsoleScreenBufferInfo(outputHandle, this.ptr) }.dwCursorPosition
-
-                        X = dwCurrPos.X
-                        Y = dwCurrPos.Y
-                    }
-                    SetConsoleCursorPosition(outputHandle, pos.readValue())
+                    SetConsoleCursorPosition(outputHandle, startPos.readValue())
+                    print(input.joinToString(""))
+                    print(" loop $index ")
+                    index++
+                    SetConsoleCursorPosition(outputHandle, currentPos.readValue())
                 }
             } finally {
                 SetConsoleMode(inputHandle, consoleMode.value)
             }
         }
+         */
     }
 }
 
