@@ -33,14 +33,13 @@ kotlin {
         }
 
         binaries {
-            executable("frc") {
-                entryPoint = "org.freem.cli.frc"
-                outputDirectory = File("bin")
-            }
-            executable("fpm") {
-                entryPoint = "org.freem.cli.fpm"
-                outputDirectory = File("bin")
-            }
+            all { outputDirectory = File("bin") }
+            fun createExecutable(vararg name: String) { for (n in name) executable(n) { entryPoint("org.freem.cli.$n") } }
+            createExecutable(
+                "frc",
+                "fpm",
+                "test"
+            )
         }
     }
 
@@ -52,7 +51,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-okio:1.5.1")
-                implementation("com.squareup.okio:okio:3.3.0")
+                implementation("com.squareup.okio:okio:3.5.0")
             }
         }
         val nativeTest by getting

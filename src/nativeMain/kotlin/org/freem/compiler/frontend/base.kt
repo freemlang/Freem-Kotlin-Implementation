@@ -1,6 +1,72 @@
 package org.freem.compiler.frontend
 
+import kotlinx.cli.ArgParser
+import kotlinx.cli.ArgType
+import kotlinx.cli.default
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.okio.decodeFromBufferedSource
+import okio.Path.Companion.toPath
+import okio.buffer
+import org.freem.Process
+import org.freem.tools.io.fs
+
+@OptIn(ExperimentalSerializationApi::class)
+object CompileConfig {
+
+    val compileConfigName: String = "frconfig.json"
+
+
+
+    private val parser = ArgParser(Process.exeNameWithoutExtension)
+    private val frconfigJsonObject = Json.decodeFromBufferedSource<JsonObject>(fs.source(compileConfigName.toPath()).buffer())
+
+
+
+    val projectDir by parser
+        .option(
+            type = ArgType.String,
+            fullName = "dir",
+            shortName = "d",
+            description = "project path"
+        ).default(
+            frconfigJsonObject["projectDir"]
+                ?.jsonPrimitive
+                ?.contentOrNull
+                ?: "./"
+        )
+
+
+
+    val outputDir by parser
+        .option(
+            type = ArgType.String,
+            fullName = "output",
+            shortName = "o",
+            description = "output path"
+        ).default(
+            frconfigJsonObject["output"]
+                ?.jsonPrimitive
+                ?.contentOrNull
+                ?: "${this.projectDir}/bin"
+        )
+
+
+
+    init {
+        parser.parse(Process.args)
+
+        //val files = fs.listRecursively(if (fs.metadataOrNull(targetDirPath)?.isDirectory == true) targetDirPath else throw FileNotFoundException(""))
+    }
+
+}
+
+
 fun run() {
+    //fs.read(pathname.toPath(), BufferedSource::readUtf8)
 
 
 //    val targetPath = "C:\\Users\\phill\\Workspace\\Development\\freem-compiler\\src\\nativeTest\\resources\\experiment-projects\\test\\test.fr".toPath()
@@ -14,27 +80,7 @@ fun run() {
 
 }
 
-//class FileIterator(pathname: String): CharIterator() {
-//    private val reader = FileSystem.SYSTEM.source(pathname.toPath()).buffer()
-//    private var current: Char? = getNext()
-//
-//    private fun getNext(): Char? {
-//        val read = reader.read()
-//        if (read == -1) {
-//            reader.close()
-//            return null
-//        }
-//        return read.toChar()
-//    }
-//
-//    override fun hasNext(): Boolean = current != null
-//
-//    override fun nextChar(): Char {
-//        val ret = current ?: throw NoSuchElementException()
-//        current = getNext()
-//        return ret
-//    }
-//}
+
 
 
 //class FrontEndAnalyzer(private val iterator: Iterator<Char>, val file: File? = null): TextMatcher(iterator) {

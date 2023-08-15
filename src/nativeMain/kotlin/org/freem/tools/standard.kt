@@ -18,4 +18,4 @@ fun UShort.toBoolean(): Boolean = toInt() != 0
 fun UInt.toBoolean(): Boolean = toInt() != 0
 fun ULong.toBoolean(): Boolean = toInt() != 0
 
-fun Char.isAlpha(): Boolean = isLowerCase() || isUpperCase()
+fun Char.isAlpha(): Boolean = this in 'a'..'z' || this in 'A'..'Z'

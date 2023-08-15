@@ -8,8 +8,8 @@ import okio.Path.Companion.toPath
 import platform.posix.__argc
 import platform.posix.__argv
 
-@OptIn(ExperimentalForeignApi::class)
 object Process {
+    @OptIn(ExperimentalForeignApi::class)
     val argv: Array<String> = arrayOf(
         __argv!![0]!!.toKString(),
         FileSystem.SYSTEM.canonicalize("./".toPath()).toString(),

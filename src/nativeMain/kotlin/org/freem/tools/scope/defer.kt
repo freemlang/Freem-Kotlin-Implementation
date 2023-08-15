@@ -1,13 +1,13 @@
-package org.freem.tools
+package org.freem.tools.scope
 
-fun deferBlock(block: DeferArea.() -> Unit) {
+fun deferBlock(block: DeferScope.() -> Unit) {
     val defer = DeferBlock()
     try { defer.block() }
     finally { for (deferFunction in defer.deferStack) deferFunction() }
 }
 
-interface DeferArea { fun defer(block: () -> Unit) }
-private class DeferBlock: DeferArea {
+interface DeferScope { fun defer(block: () -> Unit) }
+private class DeferBlock: DeferScope {
     val deferStack: MutableList<() -> Unit> = mutableListOf()
     override fun defer(block: () -> Unit) {
         deferStack.add(block)

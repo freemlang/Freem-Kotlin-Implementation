@@ -1,4 +1,4 @@
-package org.freem.tools
+package org.freem.tools.io
 
 object ConsoleColor {
     const val RESET = "\u001B[0m"
