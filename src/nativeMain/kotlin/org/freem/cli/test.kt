@@ -5,5 +5,5 @@ import org.freem.tools.scope.deferBlock
 
 fun test() = deferBlock {
     checkElapsed()
-
+    
 }

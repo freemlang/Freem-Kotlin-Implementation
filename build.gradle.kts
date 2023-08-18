@@ -1,6 +1,5 @@
 plugins {
     kotlin("multiplatform") version "1.9.0"
-    kotlin("plugin.serialization") version "1.9.0"
 }
 
 group = "org.freem"
@@ -22,12 +21,14 @@ kotlin {
     nativeTarget.apply {
         compilations.getByName("main") {
             cinterops {
+                val cinteropPath = "src/nativeInterop/cinterop"
                 val llvm by creating {
-                    defFile(project.file("src/nativeInterop/cinterop/llvm.def"))
+                    val llvmPath = "$cinteropPath/llvm-16.0.6.src"
+                    defFile(project.file("$cinteropPath/llvm.def"))
                     packageName("llvm")
-                    compilerOpts("-Isrc/nativeInterop/cinterop/llvm-16.0.6.src/include")
-                    linkerOpts("-Lsrc/nativeInterop/cinterop/llvm-16.0.6.src/lib")
-                    includeDirs.allHeaders("src/nativeInterop/cinterop/llvm-16.0.6.src/include")
+                    compilerOpts("-I$llvmPath/include")
+                    linkerOpts("-L$llvmPath/lib")
+                    includeDirs.allHeaders("$llvmPath/include")
                 }
             }
         }
@@ -49,8 +50,8 @@ kotlin {
         val nativeMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-okio:1.5.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0-RC")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-okio:1.6.0-RC")
                 implementation("com.squareup.okio:okio:3.5.0")
             }
         }
