@@ -12,10 +12,11 @@ repositories {
 kotlin {
     val hostOs = System.getProperty("os.name")
     val isArm64 = System.getProperty("os.arch") == "aarch64"
+    val name = "native"
     val nativeTarget = when {
-        hostOs == "Mac OS X"-> if (isArm64) macosArm64("native") else macosX64("native")
-        hostOs == "Linux" -> if (isArm64) linuxArm64("native") else linuxX64("native")
-        hostOs.startsWith("Windows") -> mingwX64("native")
+        hostOs == "Mac OS X"-> if (isArm64) macosArm64(name) else macosX64(name)
+        hostOs == "Linux" -> if (isArm64) linuxArm64(name) else linuxX64(name)
+        hostOs.startsWith("Windows") -> mingwX64(name)
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
 
