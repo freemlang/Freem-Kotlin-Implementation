@@ -1,4 +1,6 @@
 package = llvm
+compilerOpts = -Isrc/nativeInterop/cinterop/llvm-16.0.6.src/include
+linkerOpts = -Lsrc/nativeInterop/cinterop/llvm-16.0.6.src/lib
 headerFilter = llvm-c/*
 headers = llvm-c/Analysis.h \
           llvm-c/BitReader.h \

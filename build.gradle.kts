@@ -13,36 +13,30 @@ kotlin {
     val hostOs = System.getProperty("os.name")
     val isArm64 = System.getProperty("os.arch") == "aarch64"
     val name = "native"
-    val nativeTarget = when {
+    when {
         hostOs == "Mac OS X"-> if (isArm64) macosArm64(name) else macosX64(name)
         hostOs == "Linux" -> if (isArm64) linuxArm64(name) else linuxX64(name)
         hostOs.startsWith("Windows") -> mingwX64(name)
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }
-
-    nativeTarget.apply {
+    }.apply {
         compilations.getByName("main") {
             cinterops {
-                val cinteropPath = "src/nativeInterop/cinterop"
                 val llvm by creating {
-                    val llvmPath = "$cinteropPath/llvm-16.0.6.src"
-                    defFile(project.file("$cinteropPath/llvm.def"))
-                    packageName("llvm")
-                    compilerOpts("-I$llvmPath/include")
-                    linkerOpts("-L$llvmPath/lib")
-                    includeDirs.allHeaders("$llvmPath/include")
+                    defFile("src/nativeInterop/cinterop/llvm.def")
                 }
             }
         }
 
         binaries {
-            all { outputDirectory = File("bin") }
-            fun createExecutable(vararg name: String) { for (n in name) executable(n) { entryPoint("org.freem.cli.$n") } }
-            createExecutable(
-                "frc",
-                "fpm",
-                "test"
-            )
+            all {
+                outputDirectory = File("bin")
+            }
+            executable("frc") {
+                entryPoint = "org.freem.cli.frc"
+            }
+            executable("test") {
+                entryPoint = "org.freem.cli.test"
+            }
         }
     }
 

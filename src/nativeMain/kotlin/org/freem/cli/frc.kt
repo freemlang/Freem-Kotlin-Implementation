@@ -1,5 +1,10 @@
 package org.freem.cli
 
-fun frc() {
+import org.freem.compiler.buildscript.freem
 
+fun frc() =
+freem {
+    analyzer {
+
+    }
 }
