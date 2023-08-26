@@ -1,4 +1,7 @@
 /.idea
 /.gradle
 /build
+buildSrc/.idea
+buildSrc/.gradle
+buildSrc/build
 /bin
