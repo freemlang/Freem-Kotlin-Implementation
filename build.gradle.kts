@@ -28,9 +28,11 @@ kotlin {
         executable("frc") { entryPoint = "org.freem.cli.frc" }
         executable("test") { entryPoint = "org.freem.cli.test" }
     }
+    /*
     nativeTarget.llvm {
 
     }
+    */
 
     sourceSets {
         val commonMain by getting
