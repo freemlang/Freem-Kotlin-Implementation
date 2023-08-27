@@ -2,7 +2,7 @@ import java.io.*
 
 plugins {
     kotlin("multiplatform") version "1.9.10"
-    id("freem.manager")
+    id("org.llvm")
 }
 
 group = "org.freem"
@@ -24,15 +24,12 @@ kotlin {
     }
 
     nativeTarget.binaries {
-        all {
-            outputDirectory = File("bin")
-        }
-        executable("frc") {
-            entryPoint = "org.freem.cli.frc"
-        }
-        executable("test") {
-            entryPoint = "org.freem.cli.test"
-        }
+        all { outputDirectory = File("bin") }
+        executable("frc") { entryPoint = "org.freem.cli.frc" }
+        executable("test") { entryPoint = "org.freem.cli.test" }
+    }
+    nativeTarget.llvm {
+
     }
 
     sourceSets {

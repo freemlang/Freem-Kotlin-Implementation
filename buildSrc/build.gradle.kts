@@ -7,14 +7,15 @@ repositories {
 }
 
 dependencies {
-    implementation("org.json:json:20230618")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10")
 }
 
 gradlePlugin {
     plugins {
-        create("LLVM") {
-            id = "LLVM"
-            implementationClass = "LLVM.LLVMTask"
+        create("llvm") {
+            id = "org.llvm"
+            implementationClass = "org.llvm.LLVMPlugin"
+
         }
     }
 }

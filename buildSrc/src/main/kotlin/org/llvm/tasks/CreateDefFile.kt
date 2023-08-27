@@ -1,4 +1,4 @@
-package llvm.tasks
+package org.llvm.tasks
 
 import org.gradle.api.Task
 import org.gradle.api.tasks.TaskAction
