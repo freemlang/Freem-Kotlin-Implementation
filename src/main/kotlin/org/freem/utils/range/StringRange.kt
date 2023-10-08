@@ -1,8 +1,8 @@
-package org.freem.compiler.util.range
+package org.freem.utils.range
 
-import org.freem.compiler.util.location.MutableStringLocation
-import org.freem.compiler.util.location.StringLocation
-import org.freem.compiler.util.location.mutableStringLocationOf
+import org.freem.utils.location.MutableStringLocation
+import org.freem.utils.location.StringLocation
+import org.freem.utils.location.mutableStringLocationOf
 
 interface StringRange: Range {
     override val end: StringLocation

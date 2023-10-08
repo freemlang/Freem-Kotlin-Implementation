@@ -1,4 +1,4 @@
-package org.freem.compiler.util.collection.tree
+package org.freem.utils.collection.tree
 
 interface BinaryTree<T>: Tree<T, BinaryTreeNode<T>>, BinaryTreeNode<T> {
 

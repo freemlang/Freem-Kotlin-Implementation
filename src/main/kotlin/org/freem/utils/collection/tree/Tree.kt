@@ -1,4 +1,4 @@
-package org.freem.compiler.util.collection.tree
+package org.freem.utils.collection.tree
 
 interface Tree<T, C>: TreeNode<T, C> {
     val height: Int

@@ -1,7 +1,7 @@
-package org.freem.compiler.util.range
+package org.freem.utils.range
 
-import org.freem.compiler.util.location.Location
-import org.freem.compiler.util.location.MutableLocation
+import org.freem.utils.location.Location
+import org.freem.utils.location.MutableLocation
 
 interface Range {
     val start: Location

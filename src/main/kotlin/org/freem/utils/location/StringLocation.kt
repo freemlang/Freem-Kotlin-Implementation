@@ -1,4 +1,4 @@
-package org.freem.compiler.util.location
+package org.freem.utils.location
 
 interface StringLocation: Location {
     val index: Int

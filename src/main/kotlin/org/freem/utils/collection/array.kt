@@ -1,4 +1,4 @@
-package org.freem.compiler.util.collection
+package org.freem.utils.collection
 
 fun <T> Array<T>.hasDuplicate() = size != distinct().count()
 

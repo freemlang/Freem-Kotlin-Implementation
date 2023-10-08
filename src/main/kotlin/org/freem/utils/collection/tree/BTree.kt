@@ -1,4 +1,4 @@
-package org.freem.compiler.util.collection.tree
+package org.freem.utils.collection.tree
 
 interface BTree<T>: Tree<T, List<BTreeNode<T>>>, BTreeNode<T>
 interface MutableBTree<T>: BTree<T>, MutableTree<T, List<BTreeNode<T>>>, MutableBTreeNode<T>
