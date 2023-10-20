@@ -19,7 +19,7 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(20)
 
     sourceSets {
         val main by getting {
