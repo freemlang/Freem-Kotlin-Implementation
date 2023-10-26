@@ -2,13 +2,12 @@ package org.freem.compiler.frontend.partition
 
 import java.util.*
 
-open class PartitionProcessor<T>(): PartitionStruct<T> {
+open class PartitionProcessor<T>(): PartitionStruct<T, Nothing> {
     private var index: Int = 0
     override val stack: List<T> = Stack()
-    override val data: MutableMap<String, String> = mutableMapOf()
+    override val data: Nothing = TODO()
 
-    override fun interrupt(message: String?) = throw PartitionInterruptedException(message, this)
-    override fun import(partition: Partition<T>) = TODO("Not yet implemented")
+    override fun interrupt(message: String?) = TODO() //throw PartitionInterruptedException(message, this)
     override fun current(): T = TODO("Not yet implemented")
     override fun next(): T = TODO("Not yet implemented")
     override fun hasNext(): Boolean = TODO("Not yet implemented")
