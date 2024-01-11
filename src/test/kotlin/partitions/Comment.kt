@@ -2,33 +2,41 @@ package partitions
 
 import org.freem.compiler.frontend.Partition
 import org.freem.compiler.frontend.PartitionField
-import org.freem.compiler.frontend.PartitionInterruption
 
 sealed class Comment {
     companion object: Partition<Unit> {
         override fun PartitionField.initialize() {
-            try {
-                import(Inline)
-            } catch (interruption: PartitionInterruption) {
-                import(Multiline)
+            add case {
+                add partition Inline
+                add partition Multiline
             }
         }
     }
 
     object Inline: Comment(), Partition<Unit> {
         override fun PartitionField.initialize() {
-            need("//")
-            while (hasNext() && current() != '\n') next()
-            nextOrNull()
+            add static "//"
+
+            capture start "content"
+
+            add custom { true } repeatMin 0
+
+            capture fin "content"
+
+            add static '\n'
         }
     }
 
     object Multiline: Comment(), Partition<Unit> {
         override fun PartitionField.initialize() {
-            need("/*")
-            while (hasNext()) {
-                if (next() == '*' && nextOrNull() == '/') break
-            }
+            add static "/*"
+
+            capture start "content"
+
+            add custom { true } repeatMin 0
+
+            capture fin "content"
+            add static "*/"
         }
     }
 }

@@ -4,62 +4,36 @@ interface Partition<Return> {
     fun PartitionField.initialize(): Return
 }
 
-sealed class PartitionField: Iterator<Char> {
-
-    protected abstract val array: Array<Char>
-    var index: Int = 0
-        private set
-
-    object add {
+sealed class PartitionField {
+    val add = Add
+    object Add {
         infix fun static(string: String): AdditionalOptions { TODO() }
         infix fun static(char: Char): AdditionalOptions { TODO() }
+        infix fun custom(condition: (Char) -> Boolean): AdditionalOptions { TODO() }
+        infix fun <Return> partition(partition: Partition<Return>): AdditionalOptions { TODO() }
+        infix fun field(field: PartitionField.() -> Unit): AdditionalOptions { TODO() }
+        infix fun case(field: PartitionField.() -> Unit): AdditionalOptions { TODO() }
     }
     sealed class AdditionalOptions {
-
+        infix fun repeat(range: IntRange): AdditionalOptions { TODO() }
+        infix fun repeatMin(min: Int): AdditionalOptions { TODO() }
+        infix fun repeatMax(max: Int): AdditionalOptions { TODO() }
+        infix fun multiply(amount: Int): AdditionalOptions { TODO() }
     }
 
-    fun current(): Char= array[index]
-    fun currentOrNull(): Char? = array.getOrNull(index)
-    fun nextOrNull(): Char? = array.getOrNull(index++)
-    override fun next(): Char = array[index++]
-    override fun hasNext(): Boolean = index < array.size
-
-    fun need(char: Char, message: String? = null): Char = need(message) { it == char }
-
-    fun need(message: String? = null, condition: (Char) -> Boolean): Char {
-        val char = currentOrNull()?:interrupt(Exception("TODO"))
-        if (!condition(char)) interrupt(message)
-        index++
-        return char
+    val capture = Capture
+    object Capture {
+        infix fun use(field: PartitionField.() -> Unit): String { TODO() }
+        infix fun start(id: String): CaptureObject { TODO() }
+        infix fun fin(id: String) { TODO() }
+        infix fun fin(captureObject: CaptureObject) { TODO() }
     }
+    sealed class CaptureObject
 
-    fun need(string: String, message: String? = null): String {
-        val startIndex = index
-        for (char in string) need(char, message)
-        val result = array.sliceArray(startIndex..<index).joinToString("")
-        return result
-    }
-    
-    fun <Return> import(partition: Partition<Return>, message: String? = null): Return {
-        val startIndex = index
-        val thisRef = this
-        try {
-            return with(partition) {
-                thisRef.initialize()
-            }
-        } catch (throwable: Throwable) {
-            index = startIndex
-            interrupt(message, throwable)
-        }
-    }
-
-    fun interrupt(message: String?, cause: Throwable?)  : Nothing = throw PartitionInterruption(message, cause)
-    fun interrupt(message: String?)                     : Nothing = throw PartitionInterruption(message)
-    fun interrupt(cause: Throwable?)                    : Nothing = throw PartitionInterruption(cause)
-    fun interrupt()                                     : Nothing = throw PartitionInterruption()
+    sealed class Promise<Type>
 }
 
-class Field(override val array: Array<Char>): PartitionField()
+class Field: PartitionField()
 
 class PartitionInterruption(message: String?, cause: Throwable?): Throwable(message, cause) {
     constructor(message: String?): this(message, null)
