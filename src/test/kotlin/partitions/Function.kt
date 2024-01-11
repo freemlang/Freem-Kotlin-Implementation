@@ -7,7 +7,7 @@ class Function private constructor(val name: String, val returnType: Type) {
 
 
     companion object: Partition<Function> {
-        override fun PartitionField.execute(): Function {
+        override fun PartitionField.initialize(): Function {
             TODO("Not yet implemented")
         }
     }

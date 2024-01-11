@@ -9,7 +9,7 @@ class File private constructor(
     val imports: List<Package>,
 ) {
     companion object: Partition<File> {
-        override fun PartitionField.execute(): File {
+        override fun PartitionField.initialize(): File {
             TODO("Not yet implemented")
         }
     }

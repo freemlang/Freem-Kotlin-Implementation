@@ -7,7 +7,7 @@ class Type private constructor() {
 
 
     companion object: Partition<Type> {
-        override fun PartitionField.execute(): Type {
+        override fun PartitionField.initialize(): Type {
             TODO("Not yet implemented")
         }
     }

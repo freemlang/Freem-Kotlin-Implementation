@@ -7,7 +7,7 @@ class Expression private constructor() {
 
 
     companion object: Partition<Expression> {
-        override fun PartitionField.execute(): Expression {
+        override fun PartitionField.initialize(): Expression {
             TODO("Not yet implemented")
         }
     }

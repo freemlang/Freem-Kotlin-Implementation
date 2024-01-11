@@ -7,7 +7,7 @@ class Class private constructor(val name: String) {
 
 
     companion object: Partition<Class> {
-        override fun PartitionField.execute(): Class {
+        override fun PartitionField.initialize(): Class {
             TODO("Not yet implemented")
         }
     }

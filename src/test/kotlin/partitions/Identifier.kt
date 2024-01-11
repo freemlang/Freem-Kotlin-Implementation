@@ -7,7 +7,7 @@ class Identifier private constructor(val value: String) {
 
 
     companion object: Partition<Identifier> {
-        override fun PartitionField.execute(): Identifier {
+        override fun PartitionField.initialize(): Identifier {
             return Identifier("")
         }
     }
