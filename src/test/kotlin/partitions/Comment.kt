@@ -2,41 +2,48 @@ package partitions
 
 import org.freem.compiler.frontend.Partition
 import org.freem.compiler.frontend.PartitionField
+import org.freem.compiler.frontend.Promise
 
 sealed class Comment {
-    companion object: Partition<Unit> {
-        override fun PartitionField.initialize() {
-            add case {
+    companion object: Partition<String> {
+        override fun PartitionField.initialize(): Promise<String> {
+            val content by add case {
                 add partition Inline
                 add partition Multiline
             }
+            return content
         }
     }
 
-    object Inline: Comment(), Partition<Unit> {
-        override fun PartitionField.initialize() {
+    object Inline: Comment(), Partition<String> {
+        override fun PartitionField.initialize(): Promise<String> {
             add static "//"
 
-            capture start "content"
+            val content = newCapture()
 
             add custom { true } repeatMin 0
 
-            capture fin "content"
+            content.fin()
 
             add static '\n'
+
+            return content
         }
     }
 
-    object Multiline: Comment(), Partition<Unit> {
-        override fun PartitionField.initialize() {
+    object Multiline: Comment(), Partition<String> {
+        override fun PartitionField.initialize(): Promise<String> {
             add static "/*"
 
-            capture start "content"
+            val content = newCapture()
 
             add custom { true } repeatMin 0
 
-            capture fin "content"
+            content.fin()
+
             add static "*/"
+
+            return content
         }
     }
 }
