@@ -1,17 +1,17 @@
 package partitions
 
 import org.freem.compiler.frontend.Partition
-import org.freem.compiler.frontend.PartitionField
-import org.freem.compiler.frontend.Promise
+import org.freem.compiler.frontend.field.PartitionField
+import java.util.concurrent.Future
+import java.util.concurrent.FutureTask
 
 class Class private constructor(
     val name: Identifier,
     val modifier: AccessModifier,
     val factor: Factor,
 ) {
-    companion object: Partition<Class> {
-        override fun PartitionField.initialize(): Promise<Class> {
-
+    companion object: Partition<Class>() {
+        override fun PartitionField.initialize(): Future<Class> {
             val modifier by add partition AccessModifier
             add partition ` `
             add static "class"
@@ -26,7 +26,7 @@ class Class private constructor(
 
             add static '}'
 
-            return Promise {
+            return FutureTask {
                 Class(
                     name.get(),
                     modifier.get(),

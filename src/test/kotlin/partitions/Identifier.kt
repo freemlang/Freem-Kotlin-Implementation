@@ -1,12 +1,13 @@
 package partitions
 
 import org.freem.compiler.frontend.Partition
-import org.freem.compiler.frontend.PartitionField
-import org.freem.compiler.frontend.Promise
+import org.freem.compiler.frontend.field.PartitionField
+import java.util.concurrent.Future
+import java.util.concurrent.FutureTask
 
 class Identifier private constructor(val value: String) {
-    companion object: Partition<Identifier> {
-        override fun PartitionField.initialize(): Promise<Identifier> {
+    companion object: Partition<Identifier>() {
+        override fun PartitionField.initialize(): Future<Identifier> {
             val letter = { char: Char -> char in 'a'..'z' || char in 'A'..'Z' }
 
             val name = newCapture()
@@ -16,7 +17,7 @@ class Identifier private constructor(val value: String) {
 
             name.fin()
 
-            return Promise { Identifier(name.get()) }
+            return FutureTask { Identifier(name.get()) }
         }
     }
 }

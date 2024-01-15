@@ -1,13 +1,13 @@
 package partitions
 
 import org.freem.compiler.frontend.Partition
-import org.freem.compiler.frontend.PartitionField
-import org.freem.compiler.frontend.Promise
+import org.freem.compiler.frontend.field.PartitionField
+import java.util.concurrent.Future
 
-sealed class Comment {
-    companion object: Partition<String> {
-        override fun PartitionField.initialize(): Promise<String> {
-            val content by add case {
+sealed class Comment: Partition<String>() {
+    companion object: Partition<String>() {
+        override fun PartitionField.initialize(): Future<String> {
+            val content by add switch {
                 add partition Inline
                 add partition Multiline
             }
@@ -15,8 +15,8 @@ sealed class Comment {
         }
     }
 
-    object Inline: Comment(), Partition<String> {
-        override fun PartitionField.initialize(): Promise<String> {
+    data object Inline: Comment() {
+        override fun PartitionField.initialize(): Future<String> {
             add static "//"
 
             val content = newCapture()
@@ -31,8 +31,8 @@ sealed class Comment {
         }
     }
 
-    object Multiline: Comment(), Partition<String> {
-        override fun PartitionField.initialize(): Promise<String> {
+    data object Multiline: Comment() {
+        override fun PartitionField.initialize(): Future<String> {
             add static "/*"
 
             val content = newCapture()
