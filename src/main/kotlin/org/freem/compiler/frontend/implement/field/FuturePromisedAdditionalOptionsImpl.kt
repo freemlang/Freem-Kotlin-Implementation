@@ -1,17 +1,15 @@
-package org.freem.compiler.frontend.field
+package org.freem.compiler.frontend.implement.field
 
+import org.freem.compiler.frontend.interfaces.field.AdditionalOptions
+import org.freem.compiler.frontend.interfaces.field.FuturePromisedAdditionalOptions
 import java.util.concurrent.Future
 import kotlin.reflect.KProperty
 
-sealed interface AdditionalOptions {
-    infix fun optional(optional: Boolean): AdditionalOptions
-    infix fun repeat(range: IntRange): AdditionalOptions
-    infix fun repeatMin(min: Int): AdditionalOptions
-    infix fun repeatMax(max: Int): AdditionalOptions
-    infix fun multiply(amount: Int): AdditionalOptions
-}
+internal class FuturePromisedAdditionalOptionsImpl<FutureType>: FuturePromisedAdditionalOptions<FutureType> {
+    override fun getValue(thisRef: Any?, property: KProperty<*>): Future<FutureType> {
+        TODO("Not yet implemented")
+    }
 
-internal class AdditionalOptionsImpl: AdditionalOptions {
     override fun optional(optional: Boolean): AdditionalOptions {
         TODO("Not yet implemented")
     }
@@ -32,4 +30,3 @@ internal class AdditionalOptionsImpl: AdditionalOptions {
         TODO("Not yet implemented")
     }
 }
-

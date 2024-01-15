@@ -1,17 +1,8 @@
-package org.freem.compiler.frontend.field
+package org.freem.compiler.frontend.implement.field
 
-import java.util.concurrent.Future
-import kotlin.reflect.KProperty
+import org.freem.compiler.frontend.interfaces.field.AdditionalOptions
 
-sealed interface FuturePromisedAdditionalOptions<FutureType>: AdditionalOptions {
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): Future<FutureType>
-}
-
-internal class FuturePromisedAdditionalOptionsImpl<FutureType>: FuturePromisedAdditionalOptions<FutureType> {
-    override fun getValue(thisRef: Any?, property: KProperty<*>): Future<FutureType> {
-        TODO("Not yet implemented")
-    }
-
+internal class AdditionalOptionsImpl: AdditionalOptions {
     override fun optional(optional: Boolean): AdditionalOptions {
         TODO("Not yet implemented")
     }
