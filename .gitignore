@@ -2,3 +2,5 @@
 /.gradle
 /build
 /bin
+/build-logic/.gradle
+/build-logic/build
