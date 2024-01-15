@@ -1,4 +1,4 @@
-package org.freem.compiler.frontend.interfaces.field
+package org.freem.compiler.partition.interfaces.field
 
 interface CaseObject<ReturnsType> {
     infix fun returns(value: ReturnsType): AddObject

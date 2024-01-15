@@ -1,8 +1,8 @@
-package org.freem.compiler.frontend.implement.field
+package org.freem.compiler.partition.implement.field
 
-import org.freem.compiler.frontend.interfaces.field.AddObject
-import org.freem.compiler.frontend.interfaces.field.CaptureObject
-import org.freem.compiler.frontend.interfaces.field.PartitionField
+import org.freem.compiler.partition.interfaces.field.AddObject
+import org.freem.compiler.partition.interfaces.field.CaptureObject
+import org.freem.compiler.partition.interfaces.field.PartitionField
 import java.util.*
 
 internal class PartitionFieldImpl: PartitionField {

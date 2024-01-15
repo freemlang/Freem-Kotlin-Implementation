@@ -1,4 +1,4 @@
-package org.freem.compiler.frontend
+package org.freem.compiler.partition
 
 class PartitionInterruption(message: String?, cause: Throwable?): Throwable(message, cause) {
     constructor(message: String?): this(message, null)

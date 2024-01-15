@@ -1,4 +1,4 @@
-package org.freem.compiler.frontend
+package org.freem.compiler.partition
 
 class PartitionExecutor<Return>(private val partition: Partition<Return>) {
     fun execute(iterator: Iterator<Char>): Return {

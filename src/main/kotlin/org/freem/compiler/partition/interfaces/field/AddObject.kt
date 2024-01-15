@@ -1,6 +1,6 @@
-package org.freem.compiler.frontend.interfaces.field
+package org.freem.compiler.partition.interfaces.field
 
-import org.freem.compiler.frontend.Partition
+import org.freem.compiler.partition.Partition
 
 interface AddObject {
     infix fun static(string: String): AdditionalOptions

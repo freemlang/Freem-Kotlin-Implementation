@@ -1,10 +1,9 @@
-package org.freem.compiler.frontend.implement.field
+package org.freem.compiler.partition.implement.field
 
-import org.freem.compiler.frontend.Partition
-import org.freem.compiler.frontend.interfaces.field.*
+import org.freem.compiler.partition.Partition
+import org.freem.compiler.partition.interfaces.field.*
 import java.util.LinkedList
 import java.util.Queue
-import java.util.Stack
 
 internal class AddObjectImpl: AddObject {
     val queue: Queue<Iterator<Char>.() -> Unit> = LinkedList()

@@ -1,7 +1,7 @@
-package org.freem.compiler.frontend
+package org.freem.compiler.partition
 
-import org.freem.compiler.frontend.interfaces.field.PartitionField
-import org.freem.compiler.frontend.implement.field.PartitionFieldImpl
+import org.freem.compiler.partition.interfaces.field.PartitionField
+import org.freem.compiler.partition.implement.field.PartitionFieldImpl
 import java.util.concurrent.Future
 
 abstract class Partition<ReturnType> {

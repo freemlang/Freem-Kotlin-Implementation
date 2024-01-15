@@ -1,4 +1,4 @@
-package org.freem.compiler.frontend
+package org.freem.compiler.partition
 
 @Deprecated("Not Using")
 abstract class Promise<Value> {

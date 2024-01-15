@@ -1,8 +1,8 @@
 package partitions
 
-import org.freem.compiler.frontend.Partition
-import org.freem.compiler.frontend.interfaces.field.PartitionField
-import org.freem.compiler.frontend.UnitFuture
+import org.freem.compiler.partition.Partition
+import org.freem.compiler.partition.interfaces.field.PartitionField
+import org.freem.compiler.partition.UnitFuture
 import java.util.concurrent.Future
 
 val ` ` = WhiteSpace
