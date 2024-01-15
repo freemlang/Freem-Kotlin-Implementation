@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.bytedeco:llvm-platform:17.0.6-1.5.10-SNAPSHOT")
+    implementation("org.bytedeco:llvm:16.0.4-1.5.9")
 }
 
 testing {

@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":partition"))
+    implementation(project(":partition-analyzer"))
 }
 
 application {
