@@ -8,7 +8,6 @@ class CaptureObject internal constructor(): PartitionValue<String>() {
         TODO("Not yet implemented")
     }
 
-    override fun PartitionValueGettableField.initialize(): String {
-        TODO("Not yet implemented")
-    }
+    override val value: String
+        get() = TODO("Not yet implemented")
 }
