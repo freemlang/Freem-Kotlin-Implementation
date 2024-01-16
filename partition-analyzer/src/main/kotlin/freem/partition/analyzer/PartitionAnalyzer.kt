@@ -1,4 +1,4 @@
-package freem.compiler.partition
+package freem.partition.analyzer
 
 class PartitionAnalyzer<Return>(private val partition: Partition<Return>) {
     fun analyze(iterator: Iterator<Char>): Return {

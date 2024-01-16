@@ -1,4 +1,4 @@
-package freem.compiler.partition
+package freem.partition.analyzer
 
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit

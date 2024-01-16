@@ -1,10 +1,10 @@
-package freem.compiler.partition.implement.field
+package freem.partition.analyzer.field
 
-import freem.compiler.partition.interfaces.field.CaptureObject
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
-internal class CaptureObjectImpl: CaptureObject {
-    override fun fin() {
+class CaptureObject internal constructor(): Future<String> {
+    fun fin() {
         TODO("Not yet implemented")
     }
 
@@ -27,5 +27,4 @@ internal class CaptureObjectImpl: CaptureObject {
     override fun get(timeout: Long, unit: TimeUnit): String {
         TODO("Not yet implemented")
     }
-
 }
