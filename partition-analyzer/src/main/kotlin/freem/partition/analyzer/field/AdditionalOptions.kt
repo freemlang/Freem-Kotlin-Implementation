@@ -1,24 +1,37 @@
 package freem.partition.analyzer.field
 
-open class AdditionalOptions internal constructor() {
+import freem.partition.analyzer.PartitionAnalyzeTask
+
+open class AdditionalOptions internal constructor(private val baseTask: PartitionAnalyzeTask) {
     infix fun optional(optional: Boolean): AdditionalOptions {
-        TODO("Not yet implemented")
+
+
+
+        return this
     }
 
     infix fun repeat(range: IntRange): AdditionalOptions {
-        TODO("Not yet implemented")
+
+
+        return this
     }
 
     infix fun repeatMin(min: Int): AdditionalOptions {
-        TODO("Not yet implemented")
+
+
+        return this
     }
 
     infix fun repeatMax(max: Int): AdditionalOptions {
-        TODO("Not yet implemented")
+
+
+        return this
     }
 
     infix fun multiply(amount: Int): AdditionalOptions {
-        TODO("Not yet implemented")
+
+
+        return this
     }
 }
 

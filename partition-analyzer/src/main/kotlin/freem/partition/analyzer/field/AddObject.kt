@@ -1,10 +1,20 @@
 package freem.partition.analyzer.field
 
 import freem.partition.analyzer.Partition
+import freem.partition.analyzer.PartitionAnalyzeTask
+import freem.partition.analyzer.PartitionAnalyzeTaskExecuteObject
+import freem.partition.analyzer.PartitionAnalyzeTaskQueue
 
-class AddObject internal constructor() {
+class AddObject internal constructor(private val taskQueue: PartitionAnalyzeTaskQueue) {
+
     infix fun static(string: String): AdditionalOptions {
-        TODO("Not yet implemented")
+        val task = object: PartitionAnalyzeTask() {
+            override fun PartitionAnalyzeTaskExecuteObject.task() {
+
+            }
+        }
+        taskQueue.add(task)
+        return AdditionalOptions(task)
     }
 
     infix fun static(char: Char): AdditionalOptions {
