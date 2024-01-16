@@ -1,20 +1,19 @@
 package freem.partition.analyzer
 
 import freem.partition.analyzer.field.PartitionField
+import freem.partition.analyzer.field.value.PartitionValue
 import java.util.LinkedList
-import java.util.Queue
-import java.util.concurrent.Future
 
 abstract class Partition<ReturnType> {
-    internal val returnFuture: Future<ReturnType>
+    internal val returnValue: PartitionValue<ReturnType>
     internal val taskQueue: PartitionAnalyzeTaskQueue = LinkedList()
 
     init {
         val field = PartitionField(taskQueue)
         with(field) {
-            returnFuture = initialize()
+            returnValue = initialize()
         }
     }
 
-    protected abstract fun PartitionField.initialize(): Future<ReturnType>
+    protected abstract fun PartitionField.initialize(): PartitionValue<ReturnType>
 }

@@ -1,6 +1,7 @@
 package freem.partition.analyzer.field
 
-class SwitchField<ReturnsType> {
-    val case = CaseObject<ReturnsType>()
-}
+import freem.partition.analyzer.PartitionAnalyzeTaskQueue
 
+class SwitchField internal constructor(taskQueue: PartitionAnalyzeTaskQueue) {
+    val case = AddObject(taskQueue)
+}

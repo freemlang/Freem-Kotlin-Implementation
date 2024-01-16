@@ -2,6 +2,7 @@ package freem.partitions
 
 import freem.partition.analyzer.Partition
 import freem.partition.analyzer.field.PartitionField
+import freem.partition.analyzer.field.value.PartitionValue
 import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 
@@ -11,7 +12,7 @@ class Class private constructor(
     val factor: Factor,
 ) {
     companion object: Partition<Class>() {
-        override fun PartitionField.initialize(): Future<Class> {
+        override fun PartitionField.initialize(): PartitionValue<Class> {
             val modifier by add partition AccessModifier
             add partition ` `
             add static "class"
@@ -26,7 +27,7 @@ class Class private constructor(
 
             add static '}'
 
-            return FutureTask {
+            return newValue {
                 Class(
                     name.get(),
                     modifier.get(),

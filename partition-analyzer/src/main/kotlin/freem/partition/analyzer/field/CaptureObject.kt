@@ -1,30 +1,14 @@
 package freem.partition.analyzer.field
 
-import java.util.concurrent.Future
-import java.util.concurrent.TimeUnit
+import freem.partition.analyzer.field.value.PartitionValue
+import freem.partition.analyzer.field.value.PartitionValueGettableField
 
-class CaptureObject internal constructor(): Future<String> {
+class CaptureObject internal constructor(): PartitionValue<String>() {
     fun fin() {
         TODO("Not yet implemented")
     }
 
-    override fun cancel(mayInterruptIfRunning: Boolean): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun isCancelled(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun isDone(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun get(): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun get(timeout: Long, unit: TimeUnit): String {
+    override fun PartitionValueGettableField.initialize(): String {
         TODO("Not yet implemented")
     }
 }

@@ -2,11 +2,12 @@ package freem.partitions
 
 import freem.partition.analyzer.Partition
 import freem.partition.analyzer.field.PartitionField
+import freem.partition.analyzer.field.value.PartitionValue
 import java.util.concurrent.Future
 
 sealed class Comment: Partition<String>() {
     companion object: Partition<String>() {
-        override fun PartitionField.initialize(): Future<String> {
+        override fun PartitionField.initialize(): PartitionValue<String> {
             val content by add switch {
                 add partition Inline
                 add partition Multiline
@@ -16,7 +17,7 @@ sealed class Comment: Partition<String>() {
     }
 
     data object Inline: Comment() {
-        override fun PartitionField.initialize(): Future<String> {
+        override fun PartitionField.initialize(): PartitionValue<String> {
             add static "//"
 
             val content = newCapture()
@@ -32,7 +33,7 @@ sealed class Comment: Partition<String>() {
     }
 
     data object Multiline: Comment() {
-        override fun PartitionField.initialize(): Future<String> {
+        override fun PartitionField.initialize(): PartitionValue<String> {
             add static "/*"
 
             val content = newCapture()

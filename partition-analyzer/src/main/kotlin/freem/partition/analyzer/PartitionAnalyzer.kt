@@ -9,7 +9,7 @@ class PartitionAnalyzer<Return>(private val partition: Partition<Return>) {
                 executeObject.task()
             }
         }
-        return partition.returnFuture.resultNow()
+        return partition.returnValue.value
     }
     fun analyze(iterable: Iterable<Char>)   = analyze(iterable.iterator())
     fun analyze(array: Array<Char>)         = analyze(array.iterator())
