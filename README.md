@@ -4,4 +4,6 @@
 
 # Freem Compiler
 
-The Compiler for Freem Programming Language
+### The Compiler for Freem Programming Language
+
+This project will be replaced by freem in kotlin in the future.
