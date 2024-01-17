@@ -1,8 +1,10 @@
 package freem.partition.analyzer
 
+import freem.partition.analyzer.task.AnalyzeTaskExecutionObject
+
 class PartitionAnalyzer<Return>(private val partition: Partition<Return>) {
     fun analyze(iterator: Iterator<Char>): Return {
-        val executeObject = PartitionAnalyzeTaskExecuteObject(iterator)
+        val executeObject = AnalyzeTaskExecutionObject(iterator)
         while (true) {
             val poll = partition.taskQueue.poll() ?: break
             with(poll) {

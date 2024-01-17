@@ -1,11 +1,11 @@
 package freem.partition.analyzer.field.tasks
 
-import freem.partition.analyzer.Partition
 import freem.partition.analyzer.task.AnalyzeTask
 import freem.partition.analyzer.task.AnalyzeTaskExecutionObject
 
-internal class PartitionTask<ReturnType>(private val partition: Partition<ReturnType>): AnalyzeTask() {
+internal class CharStaticTask(private val char: Char): AnalyzeTask() {
     override fun AnalyzeTaskExecutionObject.task() {
-        TODO("Not yet implemented")
+        if (peek == char) advance()
+        else fail()
     }
 }

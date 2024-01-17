@@ -1,10 +1,10 @@
 package freem.partition.analyzer.field.tasks
 
-import freem.partition.analyzer.Partition
+import freem.partition.analyzer.field.TypedSwitchField
 import freem.partition.analyzer.task.AnalyzeTask
 import freem.partition.analyzer.task.AnalyzeTaskExecutionObject
 
-internal class PartitionTask<ReturnType>(private val partition: Partition<ReturnType>): AnalyzeTask() {
+internal class TypedSwitchTask<ReturnType>(private val field: TypedSwitchField<ReturnType>.() -> Unit): AnalyzeTask() {
     override fun AnalyzeTaskExecutionObject.task() {
         TODO("Not yet implemented")
     }

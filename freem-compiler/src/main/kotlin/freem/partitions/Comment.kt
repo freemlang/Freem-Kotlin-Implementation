@@ -3,7 +3,6 @@ package freem.partitions
 import freem.partition.analyzer.Partition
 import freem.partition.analyzer.field.PartitionField
 import freem.partition.analyzer.field.value.PartitionValue
-import java.util.concurrent.Future
 
 sealed class Comment: Partition<String>() {
     companion object: Partition<String>() {
@@ -22,7 +21,7 @@ sealed class Comment: Partition<String>() {
 
             val content = newCapture()
 
-            add custom { true } repeatMin 0
+            add judge { true } repeatMin 0
 
             content.fin()
 
@@ -38,7 +37,7 @@ sealed class Comment: Partition<String>() {
 
             val content = newCapture()
 
-            add custom { true } repeatMin 0
+            add judge { true } repeatMin 0
 
             content.fin()
 

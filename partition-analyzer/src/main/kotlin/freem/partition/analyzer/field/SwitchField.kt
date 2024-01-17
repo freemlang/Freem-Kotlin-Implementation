@@ -1,7 +1,8 @@
 package freem.partition.analyzer.field
 
-import freem.partition.analyzer.PartitionAnalyzeTaskQueue
+import freem.partition.analyzer.task.AnalyzeTask
+import java.util.*
 
-class SwitchField internal constructor(taskQueue: PartitionAnalyzeTaskQueue) {
-    val case = AddObject(taskQueue)
+class SwitchField internal constructor(taskQueue: Queue<AnalyzeTask>) {
+    val case = AnalyzeTaskRegistrationObject(taskQueue)
 }

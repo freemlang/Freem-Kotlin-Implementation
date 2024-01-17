@@ -5,6 +5,6 @@ internal class NullablePartitionValue<Type>: PartitionValue<Type>() {
     override val value: Type by lazy(LazyThreadSafetyMode.NONE) {
         val initializer = initializer
         if (initializer === null) throw IllegalStateException("PartitionValue is not initialized")
-        return@lazy PartitionValueGettableObject.initializer()
+        return@lazy PartitionValueGettableFieldImpl.initializer()
     }
 }
