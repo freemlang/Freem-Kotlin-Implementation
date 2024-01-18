@@ -1,4 +1,4 @@
-package freem.partitions
+package freem.compiler.partitions
 
 import freem.partition.analyzer.Partition
 import freem.partition.analyzer.field.PartitionField

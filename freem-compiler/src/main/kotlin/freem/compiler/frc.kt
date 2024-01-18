@@ -1,4 +1,4 @@
-package freem
+package freem.compiler
 
 import kotlin.time.TimeSource
 

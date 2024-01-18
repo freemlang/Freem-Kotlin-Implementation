@@ -7,5 +7,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("freem.frcKt")
+    mainClass.set("freem.compiler.frcKt")
 }

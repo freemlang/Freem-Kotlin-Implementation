@@ -14,6 +14,12 @@ open class AdditionalOptions<Type> internal constructor(baseTaskWrapper: Analyze
         return this
     }
 
+    infix fun repeat(count: Int): AdditionalOptions<Type> {
+
+
+        return this
+    }
+
     infix fun repeat(range: IntRange): AdditionalOptions<Type> {
 
 
@@ -32,11 +38,6 @@ open class AdditionalOptions<Type> internal constructor(baseTaskWrapper: Analyze
         return this
     }
 
-    infix fun multiply(amount: Int): AdditionalOptions<Type> {
-
-
-        return this
-    }
 
     infix fun by(value: PartitionValue<Type>): AdditionalOptions<Type> {
         if (value !is NullablePartitionValue<*>) throw IllegalArgumentException("value is already initialized")

@@ -1,12 +1,11 @@
 package freem.partition.analyzer.field
 
 import freem.partition.analyzer.field.value.*
-import freem.partition.analyzer.task.AnalyzeTask
 import freem.partition.analyzer.task.AnalyzeTaskWrapper
 import java.util.*
 
-class PartitionField internal constructor(taskQueue: Queue<AnalyzeTaskWrapper>) {
-    val add = AnalyzeTaskRegistrationObject(taskQueue)
+class PartitionField internal constructor(tasks: MutableList<AnalyzeTaskWrapper>) {
+    val add = AnalyzeTaskRegistrationObject(tasks)
     val unit = UnitPartitionValue
 
     fun <Type> newValue(): PartitionValue<Type> = NullablePartitionValue()

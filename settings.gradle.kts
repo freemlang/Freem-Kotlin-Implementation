@@ -8,4 +8,8 @@ plugins {
 
 rootProject.name = "freem"
 
-include("partition-analyzer", "freem-compiler")
+include(
+    "partition-analyzer",
+    "freem-compiler",
+    "utilities"
+)

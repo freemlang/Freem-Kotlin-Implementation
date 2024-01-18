@@ -1,5 +1,0 @@
-package freem
-
-fun main() {
-
-}
