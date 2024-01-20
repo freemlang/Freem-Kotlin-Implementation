@@ -18,16 +18,9 @@ sealed class Comment: Partition<String>() {
     data object Inline: Comment() {
         override fun PartitionField.initialize(): PartitionValue<String> {
             add static "//"
-
-            val content = newCapture()
-
-            add judge { true } repeatMin 0
-
-            content.fin()
-
-            add static '\n'
-
-            return content
+            val content by add judge { true } repeatMin 0
+            add static '\n' optional true
+            return newValue { content.get().joinToString("") }
         }
     }
 

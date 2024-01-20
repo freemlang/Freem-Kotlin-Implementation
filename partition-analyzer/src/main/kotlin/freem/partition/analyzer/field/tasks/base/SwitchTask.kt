@@ -1,14 +1,13 @@
 package freem.partition.analyzer.field.tasks.base
 
 import freem.partition.analyzer.field.SwitchField
-import freem.partition.analyzer.field.tasks.additional.AdditionalTask
 import freem.partition.analyzer.task.AnalyzeTask
-import freem.partition.analyzer.task.AnalyzeTaskExecutionObject
+import freem.partition.analyzer.task.AnalyzeTaskExecutionField
 import freem.partition.analyzer.task.AnalyzeTaskWrapper
 import java.util.LinkedList
 import java.util.Stack
 
-internal class SwitchTask: BaseTask {
+internal class SwitchTask: AnalyzeTask {
     private val tasks: List<AnalyzeTask>
 
     constructor(tasks: List<AnalyzeTask>) {
@@ -37,8 +36,7 @@ internal class SwitchTask: BaseTask {
         this.tasks = tasks
     }
 
-    override fun AnalyzeTaskExecutionObject.run() {
-
+    override fun AnalyzeTaskExecutionField.run(): Boolean {
 
     }
 }

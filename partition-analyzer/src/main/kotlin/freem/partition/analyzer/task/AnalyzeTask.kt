@@ -1,5 +1,8 @@
 package freem.partition.analyzer.task
 
 internal interface AnalyzeTask {
-    fun AnalyzeTaskExecutionObject.run()
+    /**
+     * @return success or failure
+     */
+    fun AnalyzeTaskExecutionField.run(): Boolean
 }
