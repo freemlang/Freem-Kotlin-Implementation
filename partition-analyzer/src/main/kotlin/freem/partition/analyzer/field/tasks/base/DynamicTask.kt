@@ -4,11 +4,12 @@ import freem.partition.analyzer.field.DynamicField
 import freem.partition.analyzer.task.AnalyzeTask
 import freem.partition.analyzer.task.AnalyzeTaskExecutionField
 import freem.partition.analyzer.task.AnalyzeTaskWrapper
+import freem.partition.analyzer.task.AnyAnalyzeTaskWrapper
 import java.util.LinkedList
 
 internal class DynamicTask(private val field: DynamicField.() -> Unit): AnalyzeTask {
     override fun AnalyzeTaskExecutionField.run(): Boolean {
-        val tasksWrapper = LinkedList<AnalyzeTaskWrapper>()
+        val tasksWrapper = LinkedList<AnyAnalyzeTaskWrapper>()
         val dynamicField = DynamicField(tasksWrapper)
         dynamicField.field()
         val tasks = tasksWrapper.map { it.task }

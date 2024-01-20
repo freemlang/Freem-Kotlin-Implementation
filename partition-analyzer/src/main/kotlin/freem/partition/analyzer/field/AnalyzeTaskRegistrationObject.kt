@@ -11,9 +11,10 @@ import freem.partition.analyzer.field.tasks.base.StringStaticTask
 import freem.partition.analyzer.field.tasks.base.SwitchTask
 import freem.partition.analyzer.field.tasks.base.TypedSwitchTask
 import freem.partition.analyzer.task.AnalyzeTaskWrapper
+import freem.partition.analyzer.task.AnyAnalyzeTaskWrapper
 import freem.partition.analyzer.task.wrap
 
-class AnalyzeTaskRegistrationObject internal constructor(private val tasks: MutableList<AnalyzeTaskWrapper>) {
+class AnalyzeTaskRegistrationObject internal constructor(private val tasks: MutableList<AnyAnalyzeTaskWrapper>) {
     infix fun static(string: String): DefaultAdditionalOptions<String> {
         val task = StringStaticTask(string).wrap()
         tasks.add(task)
