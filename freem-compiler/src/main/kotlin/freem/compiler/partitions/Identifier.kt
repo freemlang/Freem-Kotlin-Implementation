@@ -9,12 +9,12 @@ class Identifier private constructor(val value: String) {
         override fun PartitionField.initialize(): PartitionValue<Identifier> {
             val letter = { char: Char -> char in 'a'..'z' || char in 'A'..'Z' }
 
-            val name = newCapture()
+            val name = capture()
 
             add judge letter
             add judge { letter(it) || it.isDigit() } repeatMin 0
 
-            name.fin()
+            name.end()
 
             return newValue { Identifier(name.get()) }
         }

@@ -1,11 +1,11 @@
 package freem.partition.analyzer.field.tasks.base
 
 import freem.partition.analyzer.field.DynamicField
+import freem.partition.analyzer.field.PartitionField
 import freem.partition.analyzer.task.AnalyzeTask
 import freem.partition.analyzer.task.AnalyzeTaskExecutionField
-import freem.partition.analyzer.task.AnalyzeTaskWrapper
 import freem.partition.analyzer.task.AnyAnalyzeTaskWrapper
-import java.util.LinkedList
+import java.util.*
 
 internal class DynamicTask(private val field: DynamicField.() -> Unit): AnalyzeTask {
     override fun AnalyzeTaskExecutionField.run(): Boolean {

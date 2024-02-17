@@ -18,24 +18,19 @@ sealed class Comment: Partition<String>() {
     data object Inline: Comment() {
         override fun PartitionField.initialize(): PartitionValue<String> {
             add static "//"
-            val content by add judge { true } repeatMin 0
+            val content = newValue<String>()
+            add judge { it != '\n' } repeatMin 0 lazy false byString content
             add static '\n' optional true
-            return newValue { content.get().joinToString("") }
+            return content
         }
     }
 
     data object Multiline: Comment() {
         override fun PartitionField.initialize(): PartitionValue<String> {
             add static "/*"
-
-            val content = newCapture()
-
-            add judge { true } repeatMin 0
-
-            content.fin()
-
+            val content = newValue<String>()
+            add judge { true } repeatMin 0 byString content
             add static "*/"
-
             return content
         }
     }

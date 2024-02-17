@@ -9,7 +9,6 @@ import freem.partition.analyzer.field.value.VoidPartitionValue
 import freem.partition.analyzer.field.value.PartitionValue
 import freem.partition.analyzer.task.AnalyzeTaskWrapper
 import freem.partition.analyzer.task.AnyAnalyzeTaskWrapper
-import kotlin.reflect.KProperty
 
 open class DefaultAdditionalOptions<Type>
 internal constructor(baseTaskWrapper: AnyAnalyzeTaskWrapper): AdditionalOptions<Type>(baseTaskWrapper) {
@@ -18,35 +17,22 @@ internal constructor(baseTaskWrapper: AnyAnalyzeTaskWrapper): AdditionalOptions<
         return DefaultAdditionalOptions(baseTaskWrapper)
     }
 
-    override infix fun repeat(count: Int): RepeatAdditionalOptions<Type> {
-        baseTask = CountRepeatTask(baseTask, count)
+    private fun repeatOption(generator: () -> RepeatTask): RepeatAdditionalOptions<Type> {
+        baseTask = generator()
         @Suppress("UNCHECKED_CAST")
         return RepeatAdditionalOptions(baseTaskWrapper as AnalyzeTaskWrapper<RepeatTask>)
     }
 
-    override infix fun repeat(range: IntRange): RepeatAdditionalOptions<Type> {
-        baseTask = RangeRepeatTask(baseTask, range)
-        @Suppress("UNCHECKED_CAST")
-        return RepeatAdditionalOptions(baseTaskWrapper as AnalyzeTaskWrapper<RepeatTask>)
-    }
-
-    override infix fun repeatMin(min: Int): RepeatAdditionalOptions<Type> {
-        baseTask = MinRepeatTask(baseTask, min)
-        @Suppress("UNCHECKED_CAST")
-        return RepeatAdditionalOptions(baseTaskWrapper as AnalyzeTaskWrapper<RepeatTask>)
-    }
-
-    override infix fun repeatMax(max: Int): RepeatAdditionalOptions<Type> {
-        baseTask = MaxRepeatTask(baseTask, max)
-        @Suppress("UNCHECKED_CAST")
-        return RepeatAdditionalOptions(baseTaskWrapper as AnalyzeTaskWrapper<RepeatTask>)
-    }
+    override infix fun repeat(count: Int)       = repeatOption { CountRepeatTask(baseTask, count) }
+    override infix fun repeat(range: IntRange)  = repeatOption { RangeRepeatTask(baseTask, range) }
+    override infix fun repeatMin(min: Int)      = repeatOption { MinRepeatTask(baseTask, min) }
+    override infix fun repeatMax(max: Int)      = repeatOption { MaxRepeatTask(baseTask, max) }
 
     override infix fun by(value: PartitionValue<Type>): DefaultAdditionalOptions<Type> {
         if (value !is VoidPartitionValue<*> || value.isInitialized) throw IllegalArgumentException("value is already initialized")
-        value.initializer = {
-            TODO()
-        }
+//        value.initializer = {
+//            TODO()
+//        }
         return this
     }
 }

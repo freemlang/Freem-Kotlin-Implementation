@@ -10,59 +10,33 @@ import freem.partition.analyzer.field.tasks.base.PartitionTask
 import freem.partition.analyzer.field.tasks.base.StringStaticTask
 import freem.partition.analyzer.field.tasks.base.SwitchTask
 import freem.partition.analyzer.field.tasks.base.TypedSwitchTask
-import freem.partition.analyzer.task.AnalyzeTaskWrapper
+import freem.partition.analyzer.field.value.PartitionValue
+import freem.partition.analyzer.field.value.PartitionValueUsableField
+import freem.partition.analyzer.task.AnalyzeTask
 import freem.partition.analyzer.task.AnyAnalyzeTaskWrapper
 import freem.partition.analyzer.task.wrap
 
 class AnalyzeTaskRegistrationObject internal constructor(private val tasks: MutableList<AnyAnalyzeTaskWrapper>) {
-    infix fun static(string: String): DefaultAdditionalOptions<String> {
-        val task = StringStaticTask(string).wrap()
+    private fun <Type> register(generator: () -> AnalyzeTask): DefaultAdditionalOptions<Type> {
+        val task = generator().wrap()
         tasks.add(task)
         return DefaultAdditionalOptions(task)
     }
 
-    infix fun static(char: Char): DefaultAdditionalOptions<Char> {
-        val task = CharStaticTask(char).wrap()
-        tasks.add(task)
-        return DefaultAdditionalOptions(task)
-    }
-
-    infix fun judge(judgement: (Char) -> Boolean): DefaultAdditionalOptions<Char> {
-        val task = JudgeTask(judgement).wrap()
-        tasks.add(task)
-        return DefaultAdditionalOptions(task)
-    }
-
-    infix fun dynamic(field: DynamicField.() -> Unit): DefaultAdditionalOptions<String> {
-        val task = DynamicTask(field).wrap()
-        tasks.add(task)
-        return DefaultAdditionalOptions(task)
-    }
-
-    infix fun <ReturnType> partition(partition: Partition<ReturnType>): DefaultAdditionalOptions<ReturnType> {
-        val task = PartitionTask(partition).wrap()
-        tasks.add(task)
-        return DefaultAdditionalOptions(task)
-    }
-
-    infix fun field(field: PartitionField.() -> Unit): DefaultAdditionalOptions<String> {
-        val task = FieldTask(field).wrap()
-        tasks.add(task)
-        return DefaultAdditionalOptions(task)
-    }
-
-    infix fun switch(field: SwitchField.() -> Unit): DefaultAdditionalOptions<String> {
-        val task = SwitchTask(field).wrap()
-        tasks.add(task)
-        return DefaultAdditionalOptions(task)
-    }
-
+    infix fun static(string: String)                                    = register<String> { StringStaticTask(string) }
+    infix fun static(char: Char)                                        = register<Char> { CharStaticTask(char) }
+    infix fun judge(judgement: (Char) -> Boolean)                       = register<Char> { JudgeTask(judgement) }
+    infix fun dynamic(field: DynamicField.() -> Unit)                   = register<String> { DynamicTask(field) }
+    infix fun <ReturnType> partition(partition: Partition<ReturnType>)  = register<ReturnType> { PartitionTask(partition) }
+    infix fun field(field: PartitionField.() -> Unit)                   = register<String> { FieldTask(field) }
+    infix fun switch(field: SwitchField.() -> Unit)                     = register<String> { SwitchTask(field) }
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("typedSwitch")
-    infix fun <ReturnType> switch(field: TypedSwitchField<ReturnType>.() -> Unit): DefaultAdditionalOptions<ReturnType> {
-        val task = TypedSwitchTask(field).wrap()
-        tasks.add(task)
-        return DefaultAdditionalOptions(task)
-    }
+    infix fun <ReturnType> switch(field: TypedSwitchField<ReturnType>.() -> Unit) = register<ReturnType> { TypedSwitchTask(field) }
+
+    infix fun task(task: PartitionValueUsableField.() -> Unit) { TODO() }
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("typedTask")
+    infix fun <ReturnType> task(task: PartitionValueUsableField.() -> ReturnType): PartitionValue<ReturnType> { TODO() }
 }
 

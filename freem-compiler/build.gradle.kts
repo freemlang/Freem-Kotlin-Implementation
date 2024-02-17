@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":partition-analyzer"))
+    implementation(project(":libfsp"))
 }
 
 application {

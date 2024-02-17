@@ -10,6 +10,7 @@ rootProject.name = "freem"
 
 include(
     "partition-analyzer",
+    "libfsp",
     "freem-compiler",
     "utilities"
 )

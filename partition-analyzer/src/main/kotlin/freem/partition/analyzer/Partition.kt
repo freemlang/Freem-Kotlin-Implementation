@@ -4,6 +4,7 @@ import freem.partition.analyzer.field.PartitionField
 import freem.partition.analyzer.field.value.PartitionValue
 import freem.partition.analyzer.task.AnalyzeTask
 import freem.partition.analyzer.task.AnalyzeTaskWrapper
+import freem.partition.analyzer.task.AnyAnalyzeTaskWrapper
 import java.util.*
 
 abstract class Partition<ReturnType> {
@@ -11,7 +12,7 @@ abstract class Partition<ReturnType> {
     internal val tasks: List<AnalyzeTask>
 
     init {
-        val taskWrapperQueue: MutableList<AnalyzeTaskWrapper> = LinkedList()
+        val taskWrapperQueue: MutableList<AnyAnalyzeTaskWrapper> = LinkedList()
         val field = PartitionField(taskWrapperQueue)
         with(field) {
             returnValue = initialize()

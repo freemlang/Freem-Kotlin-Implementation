@@ -1,8 +1,5 @@
 package freem.utilities.collections.trie
 
-import freem.utilities.collections.Trie
-import freem.utilities.collections.TrieNode
-
 internal object EmptyTrie: Trie {
     override fun equals(other: Any?): Boolean = other is Trie && other.isEmpty()
     override fun hashCode(): Int = 0

@@ -1,12 +1,12 @@
 package freem.partition.analyzer.field.value
 
 internal class VoidPartitionValue<Type>: PartitionValue<Type>() {
-    var initializer: (PartitionValueGettableField.() -> Type)? = null
+    override val initializer: PartitionValueUsableField.() -> Type
+        get() = TODO("Not yet implemented")
     private val lazy = lazy(LazyThreadSafetyMode.NONE) {
         val initializer = initializer
         if (initializer === null) throw IllegalStateException("PartitionValue is not initialized")
-        return@lazy PartitionValueGettableFieldImpl.initializer()
+        return@lazy PartitionValueUsableField().initializer()
     }
-    override val value: Type by lazy
     val isInitialized get() = lazy.isInitialized()
 }
