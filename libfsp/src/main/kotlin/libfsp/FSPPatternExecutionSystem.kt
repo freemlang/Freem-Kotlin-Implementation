@@ -5,7 +5,7 @@ import libfsp.components.FSPTypedPattern
 import libfsp.components.FSPVoidPattern
 
 class FSPPatternExecutionSystem<Type, Return>(private val pattern: FSPPattern<Type, *>) {
-    fun execute(vararg input: Type): Return {
+    fun execute(input: List<Type>): Return {
         val components = pattern.components
         var componentIndex = 0
         var inputIndex = 0

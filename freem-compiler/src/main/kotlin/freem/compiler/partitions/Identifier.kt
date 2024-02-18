@@ -1,22 +1,22 @@
 package freem.compiler.partitions
 
-import freem.partition.analyzer.Partition
-import freem.partition.analyzer.field.PartitionField
-import freem.partition.analyzer.field.value.PartitionValue
+import libfsp.components.contexts.FSPPatternContext
+import libfsp.components.FSPTypedPattern
+import libfsp.reference.FSPValue
 
 class Identifier private constructor(val value: String) {
-    companion object: Partition<Identifier>() {
-        override fun PartitionField.initialize(): PartitionValue<Identifier> {
+    companion object: FSPTypedPattern<Char, Identifier>() {
+        override fun FSPPatternContext<Char>.initialize(): FSPValue<Identifier> {
             val letter = { char: Char -> char in 'a'..'z' || char in 'A'..'Z' }
 
-            val name = capture()
+            next = group {
+                next = judge(letter)
+                next = lazyRepeat(0, null, judge { letter(it) || it.isDigit() })
+            }
 
-            add judge letter
-            add judge { letter(it) || it.isDigit() } repeatMin 0
+            val name = next.asString
 
-            name.end()
-
-            return newValue { Identifier(name.get()) }
+            return value { Identifier(name.value) }
         }
     }
 }

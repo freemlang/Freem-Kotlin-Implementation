@@ -1,9 +1,8 @@
 package freem.compiler.partitions
 
-import freem.partition.analyzer.Partition
-import freem.partition.analyzer.field.PartitionField
-import freem.partition.analyzer.field.value.PartitionValue
-import java.util.concurrent.Future
+import libfsp.components.FSPTypedPattern
+import libfsp.components.contexts.FSPPatternContext
+import libfsp.reference.FSPValue
 
 enum class AccessModifier {
     PUBLIC,
@@ -11,16 +10,17 @@ enum class AccessModifier {
     PROTECTED,
     INTERNAL
     ;
-    companion object: Partition<AccessModifier>() {
-        override fun PartitionField.initialize(): PartitionValue<AccessModifier> {
-            val modifier by add.switch<AccessModifier> {
-                case returns PUBLIC      static "public"
-                case returns PRIVATE     static "private"
-                case returns PROTECTED   static "protected"
-                case returns INTERNAL    static "internal"
+    companion object: FSPTypedPattern<Char, AccessModifier>() {
+        override fun FSPPatternContext<Char>.initialize(): FSPValue<AccessModifier> {
+            val switch = switch<AccessModifier> {
+                case[PUBLIC]    = const("public")
+                case[PRIVATE]   = const("private")
+                case[PROTECTED] = const("protected")
+                case[INTERNAL]  = const("internal")
             }
+            next = switch
 
-            return modifier
+            return switch.asCaseReturn
         }
     }
 }

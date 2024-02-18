@@ -1,10 +1,10 @@
 package libfsp.components
 
-import libfsp.FSPPatternContext
-import libfsp.reference.FSPReference
+import libfsp.components.contexts.FSPPatternContext
+import libfsp.reference.FSPValue
 
-abstract class FSPTypedPattern<Type, Return>: FSPPattern<Type, FSPReference<Return>>() {
-    internal val returnReference: FSPReference<Return>
+abstract class FSPTypedPattern<Type, Return>: FSPPattern<Type, FSPValue<Return>>() {
+    internal val returnReference: FSPValue<Return>
     final override val components: Array<FSPComponent<Type>>
 
     init {

@@ -1,6 +1,6 @@
 package libfsp.components
 
-import libfsp.FSPPatternContext
+import libfsp.components.contexts.FSPPatternContext
 
 abstract class FSPVoidPattern<Type>: FSPPattern<Type, Unit>() {
     final override val components: Array<FSPComponent<Type>>

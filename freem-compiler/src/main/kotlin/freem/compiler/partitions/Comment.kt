@@ -1,36 +1,36 @@
 package freem.compiler.partitions
 
-import freem.partition.analyzer.Partition
-import freem.partition.analyzer.field.PartitionField
-import freem.partition.analyzer.field.value.PartitionValue
+import libfsp.components.contexts.FSPPatternContext
+import libfsp.components.FSPTypedPattern
+import libfsp.reference.FSPValue
 
-sealed class Comment: Partition<String>() {
-    companion object: Partition<String>() {
-        override fun PartitionField.initialize(): PartitionValue<String> {
-            val content by add switch {
-                add partition Inline
-                add partition Multiline
+sealed class Comment: FSPTypedPattern<Char, String>() {
+    companion object: FSPTypedPattern<Char, String>() {
+        override fun FSPPatternContext<Char>.initialize(): FSPValue<String> {
+            next = switch {
+                next = Inline
+                next = Multiline
             }
-            return content
+            return next.asString
         }
     }
 
     data object Inline: Comment() {
-        override fun PartitionField.initialize(): PartitionValue<String> {
-            add static "//"
-            val content = newValue<String>()
-            add judge { it != '\n' } repeatMin 0 lazy false byString content
-            add static '\n' optional true
+        override fun FSPPatternContext<Char>.initialize(): FSPValue<String> {
+            next = const("//")
+            next = greedyRepeat(0, null, judge { it != '\n' })
+            val content = next.asString
+            next = const('\n').optional()
             return content
         }
     }
 
     data object Multiline: Comment() {
-        override fun PartitionField.initialize(): PartitionValue<String> {
-            add static "/*"
-            val content = newValue<String>()
-            add judge { true } repeatMin 0 byString content
-            add static "*/"
+        override fun FSPPatternContext<Char>.initialize(): FSPValue<String> {
+            next = const("/*")
+            next = lazyRepeat(0, null, judge { true })
+            val content = next.asString
+            next = const("*/")
             return content
         }
     }

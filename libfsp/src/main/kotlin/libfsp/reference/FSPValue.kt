@@ -1,3 +1,5 @@
 package libfsp.reference
 
-sealed class FSPValue<Type>: FSPReference<Type>()
+sealed class FSPValue<Type> {
+    internal abstract val value: Type
+}
