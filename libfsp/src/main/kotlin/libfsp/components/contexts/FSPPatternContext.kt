@@ -4,7 +4,7 @@ import libfsp.components.FSPComponent
 import libfsp.components.FSPTask
 import libfsp.reference.FSPReferenceContext
 
-class FSPPatternContext<Type> internal constructor(components: MutableList<FSPComponent<Type, *>>): FSPComponentConstructContext<Type>() {
+class FSPPatternContext<Type> internal constructor(components: MutableList<FSPComponent<Type, *>>): FSPComponentContext<Type>() {
 
     internal constructor(): this(mutableListOf())
 

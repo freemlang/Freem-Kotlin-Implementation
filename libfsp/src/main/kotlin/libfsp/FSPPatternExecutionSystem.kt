@@ -2,7 +2,7 @@ package libfsp
 
 import libfsp.components.FSPPattern
 import libfsp.components.FSPTypedPattern
-import libfsp.components.FSPVoidPattern
+import libfsp.components.FSPUnitPattern
 
 class FSPPatternExecutionSystem<Type, Return>(private val pattern: FSPPattern<Type, *, Return>) {
     fun execute(input: List<Type>): Return {
@@ -17,7 +17,7 @@ class FSPPatternExecutionSystem<Type, Return>(private val pattern: FSPPattern<Ty
 
         @Suppress("UNCHECKED_CAST")
         return when (pattern) {
-            is FSPVoidPattern -> Unit
+            is FSPUnitPattern -> Unit
             is FSPTypedPattern<*, *> -> pattern.returnReference.value
         } as Return
     }

@@ -1,6 +1,6 @@
 package freem.compiler.partitions
 
-import libfsp.components.FSPVoidPattern
+import libfsp.components.FSPUnitPattern
 import libfsp.components.contexts.FSPPatternContext
 import libfsp.components.contexts.FSPSwitchContext
 import libfsp.components.contexts.FSPTypedSwitchContext
@@ -25,7 +25,7 @@ val FSPTypedSwitchContext<Char, *>.` ?` get() = OptionalEmptySpace
 val FSPTypedSwitchContext<Char, *>.`|` get() = SeparateSpace
 val FSPTypedSwitchContext<Char, *>.`|?` get() = OptionalSeparateSpace
 
-object EmptySpace: FSPVoidPattern<Char>() {
+object EmptySpace: FSPUnitPattern<Char>() {
     override fun FSPPatternContext<Char>.initialize() {
         next = switch {
             case = judge(Char::isWhitespace).lazyRepeat(1, null)
@@ -34,13 +34,13 @@ object EmptySpace: FSPVoidPattern<Char>() {
     }
 }
 
-object OptionalEmptySpace: FSPVoidPattern<Char>() {
+object OptionalEmptySpace: FSPUnitPattern<Char>() {
     override fun FSPPatternContext<Char>.initialize() {
         next = EmptySpace.optional()
     }
 }
 
-object SeparateSpace: FSPVoidPattern<Char>() {
+object SeparateSpace: FSPUnitPattern<Char>() {
     override fun FSPPatternContext<Char>.initialize() {
         next = switch {
             case = EmptySpace
@@ -49,7 +49,7 @@ object SeparateSpace: FSPVoidPattern<Char>() {
     }
 }
 
-object OptionalSeparateSpace: FSPVoidPattern<Char>() {
+object OptionalSeparateSpace: FSPUnitPattern<Char>() {
     override fun FSPPatternContext<Char>.initialize() {
         next = SeparateSpace.optional()
     }
