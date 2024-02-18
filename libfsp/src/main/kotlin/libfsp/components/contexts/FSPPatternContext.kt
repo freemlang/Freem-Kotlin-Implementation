@@ -12,14 +12,14 @@ class FSPPatternContext<Type> internal constructor(components: MutableList<FSPCo
     private val components_: MutableList<FSPComponent<Type, *>> = components
 
     private var currentComponent: FSPComponent<Type, *>? = null
-    var next: FSPComponent<Type, *>
+    var FSPPatternContext<Type>.next: FSPComponent<Type, *>
         get() = currentComponent?:throw NullPointerException()
         set(task) {
             components_.add(task)
             currentComponent = task
         }
 
-    fun task(task: FSPReferenceContext.() -> Unit) {
+    fun FSPPatternContext<Type>.task(task: FSPReferenceContext.() -> Unit) {
         components_.add(FSPTask(task))
     }
 }
