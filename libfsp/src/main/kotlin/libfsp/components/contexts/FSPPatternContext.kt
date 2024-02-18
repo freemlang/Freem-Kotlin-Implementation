@@ -20,6 +20,6 @@ class FSPPatternContext<Type> internal constructor(components: MutableList<FSPCo
         }
 
     fun FSPPatternContext<Type>.task(task: FSPReferenceContext.() -> Unit) {
-        components_.add(FSPTask(task))
+        components_.add(FSPTask { FSPReferenceContext().task() })
     }
 }

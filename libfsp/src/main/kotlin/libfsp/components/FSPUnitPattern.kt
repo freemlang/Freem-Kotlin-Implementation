@@ -9,5 +9,6 @@ abstract class FSPUnitPattern<Type>: FSPPattern<Type, Unit, Unit>() {
         val context = FSPPatternContext<Type>()
         context.initialize()
         components = context.components
+        check(components.isNotEmpty()) { "pattern is empty" }
     }
 }

@@ -11,14 +11,22 @@ import kotlin.contracts.contract
 open class FSPComponentContext<Type> internal constructor() {
 
     fun FSPComponentContext<Type>.const(value: Type): FSPConstant<Type>                    = FSPConstant(listOf(value))
-    fun FSPComponentContext<Type>.const(vararg value: Type): FSPConstant<Type>             = FSPConstant(value.toList())
-    fun FSPComponentContext<Char>.const(value: String): FSPConstant<Char>                  = FSPConstant(value.toList())
+    fun FSPComponentContext<Type>.const(vararg value: Type): FSPConstant<Type> {
+        check(value.isNotEmpty()) { "value is empty" }
+        return FSPConstant(value.toList())
+    }
+    fun FSPComponentContext<Char>.const(value: String): FSPConstant<Char> {
+        check(value.isNotEmpty()) { "value is empty" }
+        return FSPConstant(value.toList())
+    }
     fun FSPComponentContext<Type>.judge(condition: (Type) -> Boolean): FSPJudgement<Type>  = FSPJudgement(condition)
 
     @OptIn(ExperimentalContracts::class)
     fun FSPComponentContext<Type>.group(constructor: FSPPatternContext<Type>.() -> Unit): FSPGroup<Type> {
         contract { callsInPlace(constructor, InvocationKind.EXACTLY_ONCE) }
-        return FSPGroup(FSPPatternContext<Type>().apply(constructor).components)
+        val components = FSPPatternContext<Type>().apply(constructor).components
+        check(components.isNotEmpty()) { "group is empty" }
+        return FSPGroup(components)
     }
 
     @OptIn(ExperimentalContracts::class)

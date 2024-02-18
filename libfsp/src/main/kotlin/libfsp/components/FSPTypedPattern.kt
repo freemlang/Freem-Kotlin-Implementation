@@ -11,5 +11,6 @@ abstract class FSPTypedPattern<Type, Return>: FSPPattern<Type, FSPValue<Return>,
         val context = FSPPatternContext<Type>()
         returnReference = context.initialize()
         components = context.components
+        check(components.isNotEmpty()) { "pattern is empty" }
     }
 }
