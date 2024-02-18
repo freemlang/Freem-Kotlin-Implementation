@@ -1,3 +1,3 @@
 package libfsp.components
 
-data class FSPOptional<Type> internal constructor(internal val component: FSPComponent<Type>): FSPComponent<Type>
+data class FSPOptional<Type, ComponentReturn> internal constructor(internal val component: FSPComponent<Type, ComponentReturn>): FSPComponent<Type, ComponentReturn?>

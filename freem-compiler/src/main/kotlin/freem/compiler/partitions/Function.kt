@@ -1,42 +1,43 @@
 package freem.compiler.partitions
 
-import freem.partition.analyzer.Partition
-import freem.partition.analyzer.field.PartitionField
-import freem.partition.analyzer.field.value.PartitionValue
+import libfsp.components.FSPTypedPattern
+import libfsp.components.contexts.FSPPatternContext
+import libfsp.reference.FSPValue
 
 class Function private constructor(val name: Identifier, val returnType: Type) {
-    companion object: Partition<Function>() {
-        override fun PartitionField.initialize(): PartitionValue<Function> {
-            add partition AccessModifier
-            add partition ` `
-            add switch {
-                case static "infix"
-                case static "inline"
-            } optional true
-            add partition ` `
-            add static "func"
-            add switch {
-                case partition ` `
-                case field {
-                    add partition ` ?`
+    companion object: FSPTypedPattern<Char, Function>() {
+        override fun FSPPatternContext<Char>.initialize(): FSPValue<Function> {
+            next = AccessModifier
+            next = ` `
+            next = switch {
+                case = const("infix")
+                case = const("inline")
+            }.optional()
+            next = ` `
+            next = const("func")
+            next = switch {
+                case = ` `
+                case = group {
+                    next = ` ?`
                     // TODO: add partition Generic
-                    add partition ` ?`
+                    next = ` ?`
                 }
             }
-            val name by add partition Identifier
-            add partition ` ?`
-            add partition Factor
-            add partition ` ?`
-            val type = newValue<Type>()
-            add.field {
-                add static ':'
-                add partition ` ?`
-                add partition Type by type
-                add partition ` ?`
-            } optional true
-            add partition CodeBlock
+            val name: FSPValue<Identifier>
+            next = Identifier.also { name = it.fspvalue }
+            next = ` ?`
+            next = Factor
+            next = ` ?`
+            val type: FSPValue<Type>
+            next = group {
+                next = const(':')
+                next = ` ?`
+                next = Type.also { type = it.fspvalue }
+                next = ` ?`
+            }.optional()
+            next = CodeBlock
 
-            return newValue { Function(name.get(), type.get()) }
+            return value { Function(name.value, type.value) }
         }
     }
 }

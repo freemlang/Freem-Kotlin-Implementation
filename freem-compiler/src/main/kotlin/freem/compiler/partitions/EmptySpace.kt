@@ -1,45 +1,39 @@
 package freem.compiler.partitions
 
-import freem.partition.analyzer.Partition
-import freem.partition.analyzer.field.PartitionField
-import freem.partition.analyzer.field.value.PartitionValue
-import freem.partition.analyzer.field.value.UnitPartitionValue
+import libfsp.components.FSPVoidPattern
+import libfsp.components.contexts.FSPPatternContext
 
 val ` ` = EmptySpace
 val ` ?` = OptionalEmptySpace
 val `|` = SeparateSpace
 val `|?` = OptionalSeparateSpace
 
-object EmptySpace: Partition<Unit>() {
-    override fun PartitionField.initialize(): UnitPartitionValue {
-        add switch {
-            add judge Char::isWhitespace repeatMin 1
-            add partition Comment
-        } repeatMin 1
-        return unit
+object EmptySpace: FSPVoidPattern<Char>() {
+    override fun FSPPatternContext<Char>.initialize() {
+        next = switch {
+            case = judge(Char::isWhitespace).lazyRepeat(1, null)
+            case = Comment
+        }.lazyRepeat(1, null)
     }
 }
 
-object OptionalEmptySpace: Partition<Unit>() {
-    override fun PartitionField.initialize(): UnitPartitionValue {
-        add partition EmptySpace optional true
-        return unit
+object OptionalEmptySpace: FSPVoidPattern<Char>() {
+    override fun FSPPatternContext<Char>.initialize() {
+        next = EmptySpace.optional()
     }
 }
 
-object SeparateSpace: Partition<Unit>() {
-    override fun PartitionField.initialize(): PartitionValue<Unit> {
-        add switch {
-            case partition EmptySpace
-            case static ';'
-        } repeatMin 1
-        return unit
+object SeparateSpace: FSPVoidPattern<Char>() {
+    override fun FSPPatternContext<Char>.initialize() {
+        next = switch {
+            case = EmptySpace
+            case = const(';')
+        }.lazyRepeat(1, null)
     }
 }
 
-object OptionalSeparateSpace: Partition<Unit>() {
-    override fun PartitionField.initialize(): PartitionValue<Unit> {
-        add partition SeparateSpace optional true
-        return unit
+object OptionalSeparateSpace: FSPVoidPattern<Char>() {
+    override fun FSPPatternContext<Char>.initialize() {
+        next = SeparateSpace.optional()
     }
 }

@@ -20,7 +20,7 @@ enum class AccessModifier {
             }
             next = switch
 
-            return switch.asCaseReturn
+            return switch.fspvalue
         }
     }
 }

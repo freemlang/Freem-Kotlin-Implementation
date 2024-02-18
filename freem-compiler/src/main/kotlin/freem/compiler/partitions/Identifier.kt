@@ -11,10 +11,10 @@ class Identifier private constructor(val value: String) {
 
             next = group {
                 next = judge(letter)
-                next = lazyRepeat(0, null, judge { letter(it) || it.isDigit() })
+                next = judge { letter(it) || it.isDigit() }.lazyRepeat(0, null)
             }
 
-            val name = next.asString
+            val name = next.valueAsString
 
             return value { Identifier(name.value) }
         }

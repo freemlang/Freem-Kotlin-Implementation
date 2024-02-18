@@ -1,18 +1,16 @@
 package freem.compiler.partitions
 
-import freem.partition.analyzer.Partition
-import freem.partition.analyzer.field.PartitionField
-import freem.partition.analyzer.field.value.PartitionValue
-import java.util.concurrent.Future
-import java.util.concurrent.FutureTask
+import libfsp.components.FSPTypedPattern
+import libfsp.components.contexts.FSPPatternContext
+import libfsp.reference.FSPValue
 
 class CodeBlock {
-    companion object: Partition<CodeBlock>() {
-        override fun PartitionField.initialize(): PartitionValue<CodeBlock> {
-            add static '{'
-            add static '}'
+    companion object: FSPTypedPattern<Char, CodeBlock>() {
+        override fun FSPPatternContext<Char>.initialize(): FSPValue<CodeBlock> {
+            next = const('{')
+            next = const('}')
 
-            return newValue { CodeBlock() }
+            return value { CodeBlock() }
         }
     }
 }

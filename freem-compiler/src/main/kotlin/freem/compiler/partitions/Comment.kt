@@ -11,15 +11,15 @@ sealed class Comment: FSPTypedPattern<Char, String>() {
                 next = Inline
                 next = Multiline
             }
-            return next.asString
+            return next.valueAsString
         }
     }
 
     data object Inline: Comment() {
         override fun FSPPatternContext<Char>.initialize(): FSPValue<String> {
             next = const("//")
-            next = greedyRepeat(0, null, judge { it != '\n' })
-            val content = next.asString
+            next = judge { it != '\n' }.greedyRepeat(0, null)
+            val content = next.valueAsString
             next = const('\n').optional()
             return content
         }
@@ -28,8 +28,8 @@ sealed class Comment: FSPTypedPattern<Char, String>() {
     data object Multiline: Comment() {
         override fun FSPPatternContext<Char>.initialize(): FSPValue<String> {
             next = const("/*")
-            next = lazyRepeat(0, null, judge { true })
-            val content = next.asString
+            next = judge { true }.lazyRepeat(0, null)
+            val content = next.valueAsString
             next = const("*/")
             return content
         }

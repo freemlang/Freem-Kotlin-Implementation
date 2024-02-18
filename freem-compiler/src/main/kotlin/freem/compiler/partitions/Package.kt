@@ -1,15 +1,14 @@
 package freem.compiler.partitions
 
-import freem.partition.analyzer.Partition
-import freem.partition.analyzer.field.PartitionField
-import freem.partition.analyzer.field.value.PartitionValue
-import java.util.concurrent.Future
+import libfsp.components.FSPTypedPattern
+import libfsp.components.contexts.FSPPatternContext
+import libfsp.reference.FSPValue
 
 class Package private constructor(
 
 ) {
-    companion object: Partition<Package>() {
-        override fun PartitionField.initialize(): PartitionValue<Package> {
+    companion object: FSPTypedPattern<Char, Package>() {
+        override fun FSPPatternContext<Char>.initialize(): FSPValue<Package> {
             TODO("Not yet implemented")
         }
     }

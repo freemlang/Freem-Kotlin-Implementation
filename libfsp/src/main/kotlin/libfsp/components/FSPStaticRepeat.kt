@@ -1,3 +1,6 @@
 package libfsp.components
 
-data class FSPStaticRepeat<Type>(internal val times: Int, override val component: FSPComponent<Type>): FSPRepeat<Type>()
+data class FSPStaticRepeat<Type, ComponentReturn, Component: FSPComponent<Type, ComponentReturn>>(
+    internal val times: Int,
+    override val component: Component
+): FSPRepeat<Type, ComponentReturn, Component>()

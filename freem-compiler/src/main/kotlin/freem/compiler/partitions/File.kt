@@ -1,8 +1,8 @@
 package freem.compiler.partitions
 
-import freem.partition.analyzer.Partition
-import freem.partition.analyzer.field.PartitionField
-import freem.partition.analyzer.field.value.PartitionValue
+import libfsp.components.FSPTypedPattern
+import libfsp.components.contexts.FSPPatternContext
+import libfsp.reference.FSPValue
 
 class File private constructor(
     val `package`: Package,
@@ -10,46 +10,49 @@ class File private constructor(
     val functions: List<Function>,
     val classes: List<Class>
 ) {
-    companion object: Partition<File>() {
-        override fun PartitionField.initialize(): PartitionValue<File> {
+    companion object: FSPTypedPattern<Char, File>() {
+        override fun FSPPatternContext<Char>.initialize(): FSPValue<File> {
+            next = `|?`
 
-            add partition `|?`
+            next = const("package")
+            next = ` `
+            val `package`: FSPValue<Package>
+            next = Package.also { `package` = it.fspvalue }
 
-            add static "package"
-            add partition ` `
-            val `package` by add partition Package
+            next = `|`
 
-            add partition `|`
+            next = const("import")
+            next = ` `
+            val imports: FSPValue<List<Package>>
+            next = Package.lazyRepeat(0, null).also { imports = it.fspvalue }
 
-            add static "import"
-            add partition ` `
-            val imports by add partition Package repeatMin 0
+            next = `|`
 
-            add partition `|`
+            val classes = value { mutableListOf<Class>() }
+            val functions = value { mutableListOf<Function>() }
 
-            val classes = newValue { mutableListOf<Class>() }
-            val functions = newValue { mutableListOf<Function>() }
-
-            add field {
-                add switch {
-                    case field {
-                        val `class` by add partition Class
-                        add task { classes.get().add(`class`.get()) }
+            next = group {
+                next = switch {
+                    case = group {
+                        val `class`: FSPValue<Class>
+                        next = Class.also { `class` = it.fspvalue }
+                        task { classes.value.add(`class`.value) }
                     }
-                    case field {
-                        val function by add partition Function
-                        add task { functions.get().add(function.get()) }
+                    case = group {
+                        val function: FSPValue<Function>
+                        next = Function.also { function = it.fspvalue }
+                        task { functions.value.add(function.value) }
                     }
                 }
-                add partition `|?`
+                next = `|?`
             }
 
-            return newValue {
+            return value {
                 File(
-                    `package` = `package`.get(),
-                    imports = imports.get(),
-                    functions = functions.get(),
-                    classes = classes.get()
+                    `package` = `package`.value,
+                    imports = imports.value,
+                    functions = functions.value,
+                    classes = classes.value
                 )
             }
         }
