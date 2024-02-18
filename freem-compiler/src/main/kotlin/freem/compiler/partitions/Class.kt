@@ -13,12 +13,12 @@ class Class private constructor(
         override fun FSPPatternContext<Char>.initialize(): FSPValue<Class> {
             val modifier: FSPValue<AccessModifier>
             next = AccessModifier.also { modifier = it.fspvalue }
-            next = ` `
+            ` `
             next = const("class")
-            next = ` `
+            ` `
             val name: FSPValue<Identifier>
             next = Identifier.also { name = it.fspvalue }
-            next = ` ?`
+            ` ?`
             val factor: FSPValue<Factor>
             next = Factor.also { factor = it.fspvalue }
 
