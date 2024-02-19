@@ -1,3 +1,5 @@
 package libfsp.components
 
-data class FSPGroup<Type> internal constructor(internal val components: List<FSPComponent<Type, *>>): FSPComponent<Type, List<Type>>
+class FSPGroup<Type> internal constructor(components: List<FSPComponent<Type, *>>): FSPComponent<Type, List<Type>> {
+    internal val components: List<FSPComponent<Type, *>> = FSPConstant.combineConsecutiveConstants(components)
+}

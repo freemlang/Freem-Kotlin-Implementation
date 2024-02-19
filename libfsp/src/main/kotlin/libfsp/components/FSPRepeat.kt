@@ -1,5 +1,5 @@
 package libfsp.components
 
-sealed class FSPRepeat<Type, ComponentReturn, Component: FSPComponent<Type, ComponentReturn>>: FSPComponent<Type, List<ComponentReturn>> {
-    internal abstract val component: Component
+sealed class FSPRepeat<Type, Return>: FSPComponent<Type, List<Return>> {
+    internal abstract val component: FSPComponent<Type, Return>
 }

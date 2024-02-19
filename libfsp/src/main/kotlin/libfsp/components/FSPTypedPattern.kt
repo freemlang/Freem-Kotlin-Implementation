@@ -1,6 +1,6 @@
 package libfsp.components
 
-import libfsp.components.contexts.FSPPatternContext
+import libfsp.components.contexts.FSPPatternInitializeContext
 import libfsp.reference.FSPValue
 
 abstract class FSPTypedPattern<Type, Return>: FSPPattern<Type, FSPValue<Return>, Return>() {
@@ -8,9 +8,10 @@ abstract class FSPTypedPattern<Type, Return>: FSPPattern<Type, FSPValue<Return>,
     final override val components: List<FSPComponent<Type, *>>
 
     init {
-        val context = FSPPatternContext<Type>()
+        val context = FSPPatternInitializeContext<Type>()
+        @Suppress("LeakingThis")
         returnReference = context.initialize()
-        components = context.components
+        components = FSPConstant.combineConsecutiveConstants(context.components)
         check(components.isNotEmpty()) { "pattern is empty" }
     }
 }

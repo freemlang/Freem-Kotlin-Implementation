@@ -1,32 +1,32 @@
 package freem.compiler.partitions
 
 import libfsp.components.FSPUnitPattern
-import libfsp.components.contexts.FSPPatternContext
-import libfsp.components.contexts.FSPSwitchContext
-import libfsp.components.contexts.FSPTypedSwitchContext
+import libfsp.components.contexts.FSPPatternInitializeContext
+import libfsp.components.contexts.FSPSwitchConstructContext
+import libfsp.components.contexts.FSPTypedSwitchConstructContext
 
 val ` ` = EmptySpace
 val ` ?` = OptionalEmptySpace
 val `|` = SeparateSpace
 val `|?` = OptionalSeparateSpace
 
-val FSPPatternContext<Char>.` `: Unit get() { next = EmptySpace }
-val FSPPatternContext<Char>.` ?`: Unit get() { next = OptionalEmptySpace }
-val FSPPatternContext<Char>.`|`: Unit get() { next = SeparateSpace }
-val FSPPatternContext<Char>.`|?`: Unit get() { next = OptionalSeparateSpace }
+val FSPPatternInitializeContext<Char>.` `: Unit get() { next = EmptySpace }
+val FSPPatternInitializeContext<Char>.` ?`: Unit get() { next = OptionalEmptySpace }
+val FSPPatternInitializeContext<Char>.`|`: Unit get() { next = SeparateSpace }
+val FSPPatternInitializeContext<Char>.`|?`: Unit get() { next = OptionalSeparateSpace }
 
-val FSPSwitchContext<Char>.` ` get() = EmptySpace
-val FSPSwitchContext<Char>.` ?` get() = OptionalEmptySpace
-val FSPSwitchContext<Char>.`|` get() = SeparateSpace
-val FSPSwitchContext<Char>.`|?` get() = OptionalSeparateSpace
+val FSPSwitchConstructContext<Char>.` ` get() = EmptySpace
+val FSPSwitchConstructContext<Char>.` ?` get() = OptionalEmptySpace
+val FSPSwitchConstructContext<Char>.`|` get() = SeparateSpace
+val FSPSwitchConstructContext<Char>.`|?` get() = OptionalSeparateSpace
 
-val FSPTypedSwitchContext<Char, *>.` ` get() = EmptySpace
-val FSPTypedSwitchContext<Char, *>.` ?` get() = OptionalEmptySpace
-val FSPTypedSwitchContext<Char, *>.`|` get() = SeparateSpace
-val FSPTypedSwitchContext<Char, *>.`|?` get() = OptionalSeparateSpace
+val FSPTypedSwitchConstructContext<Char, *>.` ` get() = EmptySpace
+val FSPTypedSwitchConstructContext<Char, *>.` ?` get() = OptionalEmptySpace
+val FSPTypedSwitchConstructContext<Char, *>.`|` get() = SeparateSpace
+val FSPTypedSwitchConstructContext<Char, *>.`|?` get() = OptionalSeparateSpace
 
 object EmptySpace: FSPUnitPattern<Char>() {
-    override fun FSPPatternContext<Char>.initialize() {
+    override fun FSPPatternInitializeContext<Char>.initialize() {
         next = switch {
             case = judge(Char::isWhitespace).lazyRepeat(1, null)
             case = Comment
@@ -35,13 +35,13 @@ object EmptySpace: FSPUnitPattern<Char>() {
 }
 
 object OptionalEmptySpace: FSPUnitPattern<Char>() {
-    override fun FSPPatternContext<Char>.initialize() {
+    override fun FSPPatternInitializeContext<Char>.initialize() {
         next = EmptySpace.optional()
     }
 }
 
 object SeparateSpace: FSPUnitPattern<Char>() {
-    override fun FSPPatternContext<Char>.initialize() {
+    override fun FSPPatternInitializeContext<Char>.initialize() {
         next = switch {
             case = EmptySpace
             case = const(';')
@@ -50,7 +50,7 @@ object SeparateSpace: FSPUnitPattern<Char>() {
 }
 
 object OptionalSeparateSpace: FSPUnitPattern<Char>() {
-    override fun FSPPatternContext<Char>.initialize() {
+    override fun FSPPatternInitializeContext<Char>.initialize() {
         next = SeparateSpace.optional()
     }
 }

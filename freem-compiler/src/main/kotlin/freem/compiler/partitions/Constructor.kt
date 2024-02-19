@@ -1,12 +1,12 @@
 package freem.compiler.partitions
 
 import libfsp.components.FSPTypedPattern
-import libfsp.components.contexts.FSPPatternContext
+import libfsp.components.contexts.FSPPatternInitializeContext
 import libfsp.reference.FSPValue
 
 class Constructor {
     companion object: FSPTypedPattern<Char, Constructor>() {
-        override fun FSPPatternContext<Char>.initialize(): FSPValue<Constructor> {
+        override fun FSPPatternInitializeContext<Char>.initialize(): FSPValue<Constructor> {
             next = AccessModifier
             ` `
             next = const("constructor")

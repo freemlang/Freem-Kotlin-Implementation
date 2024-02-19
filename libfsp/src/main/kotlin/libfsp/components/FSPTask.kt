@@ -1,3 +1,5 @@
 package libfsp.components
 
-data class FSPTask<Type> internal constructor(internal val task: Runnable): FSPComponent<Type, Nothing>
+internal sealed interface FSPTask<Type>: FSPComponent<Type, Nothing> {
+    fun run()
+}
