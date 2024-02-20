@@ -1,7 +1,7 @@
 package freem.utilities.collections.trie
 
-interface TrieNode {
+interface TrieNode<out Type> {
     val isLeaf: Boolean
-    val children: Map<Char, TrieNode>?
-    operator fun get(char: Char) = children?.get(char)
+    val children: Map<@UnsafeVariance Type, TrieNode<Type>>?
+    operator fun get(key: @UnsafeVariance Type) = children?.get(key)
 }

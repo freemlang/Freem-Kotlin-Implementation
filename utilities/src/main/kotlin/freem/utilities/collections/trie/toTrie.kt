@@ -1,8 +1,8 @@
 package freem.utilities.collections.trie
 
-fun Array<out String>.toTrie(): Trie = HashTrie(toList())
-fun Collection<String>.toTrie(): Trie = HashTrie(this)
-fun Sequence<String>.toTrie(): Trie = HashTrie(toList())
-fun Array<out String>.toMutableTrie(): MutableTrie = HashTrie(toList())
-fun Collection<String>.toMutableTrie(): MutableTrie = HashTrie(this)
-fun Sequence<String>.toMutableTrie(): MutableTrie = HashTrie(toList())
+fun <Type> Array<out List<Type>>.toTrie(): Trie<Type> = HashTrie(toList())
+fun <Type> Collection<List<Type>>.toTrie(): Trie<Type> = HashTrie(this)
+fun <Type> Sequence<List<Type>>.toTrie(): Trie<Type> = HashTrie(toList())
+fun <Type> Array<out List<Type>>.toMutableTrie(): MutableTrie<Type> = HashTrie(toList())
+fun <Type> Collection<List<Type>>.toMutableTrie(): MutableTrie<Type> = HashTrie(this)
+fun <Type> Sequence<List<Type>>.toMutableTrie(): MutableTrie<Type> = HashTrie(toList())

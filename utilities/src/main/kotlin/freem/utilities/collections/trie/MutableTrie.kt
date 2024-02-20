@@ -1,3 +1,3 @@
 package freem.utilities.collections.trie
 
-interface MutableTrie: Trie, MutableCollection<String>
+interface MutableTrie<out Type>: Trie<Type>, MutableCollection<List<@UnsafeVariance Type>>

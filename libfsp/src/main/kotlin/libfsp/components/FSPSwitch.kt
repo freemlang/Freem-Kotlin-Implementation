@@ -1,5 +1,8 @@
 package libfsp.components
 
+import freem.utilities.collections.trie.toTrie
+import freem.utilities.collections.trie.trieOf
+
 class FSPSwitch<Type> internal constructor(components: List<FSPComponent<Type, *>>): FSPComponent<Type, List<Type>> {
     internal val components: List<FSPComponent<Type, *>>
 
@@ -15,6 +18,8 @@ class FSPSwitch<Type> internal constructor(components: List<FSPComponent<Type, *
                     1 -> resultComponents.add(consecutiveComponentBuffer[0])
                     else -> when (consecutiveComponentBuffer[0]) {
                         is FSPConstant -> {
+                            @Suppress("UNCHECKED_CAST") (consecutiveComponentBuffer as List<FSPConstant<Type>>)
+                            val trie = consecutiveComponentBuffer.map { it.content }.toTrie()
 
                         }
                         is FSPGroup -> TODO()

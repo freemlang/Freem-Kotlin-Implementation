@@ -3,34 +3,34 @@ package freem.utilities.collections.trie
 import java.util.*
 import kotlin.collections.LinkedHashMap
 
-open class HashTrie: MutableTrie {
+class HashTrie<out Type>: MutableTrie<Type> {
 
     constructor()
-    constructor(elements: Collection<String>) { addAll(elements) }
+    constructor(elements: Collection<List<Type>>) { addAll(elements) }
 
     override val isLeaf: Boolean get() = false
-    override val children: Map<Char, TrieNode>? get() = innerChildren
-    private var innerChildren: MutableMap<Char, MutableTrieNode>? = null
+    override val children: Map<@UnsafeVariance Type, TrieNode<Type>>? get() = innerChildren
+    private var innerChildren: MutableMap<Type, MutableTrieNode<Type>>? = null
     override val size: Int get() = innerSize
     private var innerSize: Int = 0
 
-    override fun contains(element: String): Boolean {
-        var current: TrieNode = this
+    override fun contains(element: List<@UnsafeVariance Type>): Boolean {
+        var current: TrieNode<Type> = this
         for (char in element) current = current.children?.get(char)?:return false
         return current.isLeaf
     }
 
-    override fun containsAll(elements: Collection<String>): Boolean = elements.any { this@HashTrie.contains(it).not() }
+    override fun containsAll(elements: Collection<List<@UnsafeVariance Type>>): Boolean = elements.any { this@HashTrie.contains(it).not() }
 
     override fun isEmpty(): Boolean = children == null
 
-    override fun iterator(): MutableIterator<String> =
-        object: MutableIterator<String> {
+    override fun iterator(): MutableIterator<List<Type>> =
+        object: MutableIterator<List<Type>> {
             override fun hasNext(): Boolean {
                 TODO("Not yet implemented")
             }
 
-            override fun next(): String {
+            override fun next(): List<Type> {
                 TODO("Not yet implemented")
             }
 
@@ -39,27 +39,27 @@ open class HashTrie: MutableTrie {
             }
         }
 
-    private val thisAsMutableTrieNode: MutableTrieNode by lazy {
-        object: MutableTrieNode {
+    private val thisAsMutableTrieNode: MutableTrieNode<Type> by lazy {
+        object: MutableTrieNode<Type> {
             override var isLeaf: Boolean
                 get() = false
                 set(_) {}
-            override var children: MutableMap<Char, MutableTrieNode>?
+            override var children: MutableMap<@UnsafeVariance Type, MutableTrieNode<@UnsafeVariance Type>>?
                 get() = this@HashTrie.innerChildren
                 set(value) { this@HashTrie.innerChildren = value }
             override fun toString(): String = "{ isLeaf=$isLeaf, children=$children }"
         }
     }
 
-    override fun add(element: String): Boolean {
+    override fun add(element: List<@UnsafeVariance Type>): Boolean {
         if (element.isEmpty()) return false
         var current = thisAsMutableTrieNode
-        for (char in element) {
+        for (type in element) {
             if (current.children == null) current.children = LinkedHashMap(4)
-            current = current.children!!.getOrPut(char) {
-                object: MutableTrieNode {
+            current = current.children!!.getOrPut(type) {
+                object: MutableTrieNode<Type> {
                     override var isLeaf: Boolean = false
-                    override var children: MutableMap<Char, MutableTrieNode>? = null
+                    override var children: MutableMap<@UnsafeVariance Type, MutableTrieNode<@UnsafeVariance Type>>? = null
                     override fun toString(): String = "{ isLeaf=$isLeaf, children=$children }"
                 }
             }
@@ -71,18 +71,18 @@ open class HashTrie: MutableTrie {
         } else false
     }
 
-    override fun addAll(elements: Collection<String>): Boolean = elements.any { this@HashTrie.add(it).not() }
+    override fun addAll(elements: Collection<List<@UnsafeVariance Type>>): Boolean = elements.any { this@HashTrie.add(it).not() }
 
     override fun clear() {
         innerChildren = null // 메모리 누수 확인 안함
         innerSize = 0
     }
 
-    override fun remove(element: String): Boolean {
+    override fun remove(element: List<@UnsafeVariance Type>): Boolean {
         if (element.isEmpty()) return false
-        val currentStack = Stack<MutableTrieNode>()
+        val currentStack = Stack<MutableTrieNode<Type>>()
         currentStack += thisAsMutableTrieNode
-        for (char in element) currentStack += currentStack.last().children?.get(char)?:return false
+        for (type in element) currentStack += currentStack.last().children?.get(type)?:return false
         val last = currentStack.last()
         if (last.isLeaf.not()) return false
         last.isLeaf = false
@@ -95,9 +95,9 @@ open class HashTrie: MutableTrie {
         return true
     }
 
-    override fun removeAll(elements: Collection<String>): Boolean = elements.any { this@HashTrie.remove(it).not() }
+    override fun removeAll(elements: Collection<List<@UnsafeVariance Type>>): Boolean = elements.any { this@HashTrie.remove(it).not() }
 
-    override fun retainAll(elements: Collection<String>): Boolean {
+    override fun retainAll(elements: Collection<List<@UnsafeVariance Type>>): Boolean {
         TODO("Not yet implemented")
     }
 
@@ -107,7 +107,7 @@ open class HashTrie: MutableTrie {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as HashTrie
+        other as HashTrie<*>
 
         if (children != other.children) return false
         if (size != other.size) return false

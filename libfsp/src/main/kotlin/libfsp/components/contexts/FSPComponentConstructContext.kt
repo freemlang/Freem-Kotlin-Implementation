@@ -53,3 +53,8 @@ open class FSPComponentConstructContext<Type> internal constructor() {
     val <Type, Return> FSPComponent<Type, Return>.fspvalue: FSPValue<Return> get() = TODO()
     val FSPComponent<Char, *>.valueAsString: FSPValue<String> get() = TODO()
 }
+
+context(FSPComponentConstructContext<Char>)
+fun a() {
+
+}

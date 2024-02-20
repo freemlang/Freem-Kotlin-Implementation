@@ -1,8 +1,8 @@
 package freem.utilities.collections.trie
 
-fun emptyTrie(): Trie = EmptyTrie
+fun <Type> emptyTrie(): Trie<Type> = EmptyTrie
 
-fun trieOf(): Trie = emptyTrie()
-fun trieOf(vararg word: String): Trie = if (word.isNotEmpty()) HashTrie(word.asList()) else emptyTrie()
-fun mutableTrieOf(): MutableTrie = HashTrie()
-fun mutableTrieOf(vararg word: String): MutableTrie = HashTrie(word.asList())
+fun <Type> trieOf(): Trie<Type> = emptyTrie()
+fun <Type> trieOf(vararg element: List<Type>): Trie<Type> = if (element.isNotEmpty()) HashTrie(element.asList()) else emptyTrie()
+fun <Type> mutableTrieOf(): MutableTrie<Type> = HashTrie()
+fun <Type> mutableTrieOf(vararg element: List<Type>): MutableTrie<Type> = HashTrie(element.asList())
