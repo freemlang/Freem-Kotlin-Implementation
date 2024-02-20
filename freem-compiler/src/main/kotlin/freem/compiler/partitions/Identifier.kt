@@ -1,12 +1,12 @@
 package freem.compiler.partitions
 
-import libfsp.components.contexts.FSPPatternInitializeContext
+import libfsp.components.contexts.FSPPatternInitializeDispatchReceiver
 import libfsp.components.FSPTypedPattern
 import libfsp.reference.FSPValue
 
 class Identifier private constructor(val value: String) {
     companion object: FSPTypedPattern<Char, Identifier>() {
-        override fun FSPPatternInitializeContext<Char>.initialize(): FSPValue<Identifier> {
+        override fun FSPPatternInitializeDispatchReceiver<Char>.initialize(): FSPValue<Identifier> {
             val letter = { char: Char -> char in 'a'..'z' || char in 'A'..'Z' }
 
             next = group {

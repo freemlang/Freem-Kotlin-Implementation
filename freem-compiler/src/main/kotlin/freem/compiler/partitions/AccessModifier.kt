@@ -1,7 +1,7 @@
 package freem.compiler.partitions
 
 import libfsp.components.FSPTypedPattern
-import libfsp.components.contexts.FSPPatternInitializeContext
+import libfsp.components.contexts.FSPPatternInitializeDispatchReceiver
 import libfsp.reference.FSPValue
 
 enum class AccessModifier {
@@ -11,7 +11,7 @@ enum class AccessModifier {
     INTERNAL
     ;
     companion object: FSPTypedPattern<Char, AccessModifier>() {
-        override fun FSPPatternInitializeContext<Char>.initialize(): FSPValue<AccessModifier> {
+        override fun FSPPatternInitializeDispatchReceiver<Char>.initialize(): FSPValue<AccessModifier> {
             val switch = switch<AccessModifier> {
                 case[PUBLIC]    = const("public")
                 case[PRIVATE]   = const("private")

@@ -4,7 +4,7 @@ import libfsp.components.FSPComponent
 import libfsp.components.FSPLambdaTask
 import libfsp.reference.FSPReferenceContext
 
-class FSPPatternInitializeContext<Type> internal constructor(components: MutableList<FSPComponent<Type, *>>): FSPComponentConstructContext<Type>() {
+class FSPPatternInitializeDispatchReceiver<Type> internal constructor(components: MutableList<FSPComponent<Type, *>>): FSPComponentConstructDispatchReceiver<Type>() {
 
     internal constructor(): this(mutableListOf())
 
@@ -12,14 +12,16 @@ class FSPPatternInitializeContext<Type> internal constructor(components: Mutable
     private val components_: MutableList<FSPComponent<Type, *>> = components
 
     private var currentComponent: FSPComponent<Type, *>? = null
-    var FSPPatternInitializeContext<Type>.next: FSPComponent<Type, *>
+    context(FSPPatternInitializeDispatchReceiver<Type>)
+    var next: FSPComponent<Type, *>
         get() = currentComponent?:throw NullPointerException()
         set(task) {
             components_.add(task)
             currentComponent = task
         }
 
-    fun FSPPatternInitializeContext<Type>.task(task: FSPReferenceContext.() -> Unit) {
-        components_.add(FSPLambdaTask { FSPReferenceContext().task() })
+    context(FSPPatternInitializeDispatchReceiver<Type>)
+    fun task(task: context(FSPReferenceContext) () -> Unit) {
+        components_.add(FSPLambdaTask { task(FSPReferenceContext()) })
     }
 }

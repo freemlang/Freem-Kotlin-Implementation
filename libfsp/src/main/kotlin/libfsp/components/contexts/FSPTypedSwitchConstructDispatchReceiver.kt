@@ -2,7 +2,7 @@ package libfsp.components.contexts
 
 import libfsp.components.FSPComponent
 
-class FSPTypedSwitchConstructContext<Type, Return> internal constructor(components: MutableMap<FSPComponent<Type, *>, Return>): FSPComponentConstructContext<Type>() {
+class FSPTypedSwitchConstructDispatchReceiver<Type, Return> internal constructor(components: MutableMap<FSPComponent<Type, *>, Return>): FSPComponentConstructDispatchReceiver<Type>() {
 
     internal constructor(): this(mutableMapOf())
 
@@ -10,7 +10,8 @@ class FSPTypedSwitchConstructContext<Type, Return> internal constructor(componen
     private val components_: MutableMap<FSPComponent<Type, *>, Return> = components
 
     private val case_ = Case()
-    val FSPTypedSwitchConstructContext<Type, Return>.case get() = case_
+    context(FSPTypedSwitchConstructDispatchReceiver<Type, Return>)
+    val case get() = case_
     inner class Case {
         operator fun set(`return`: Return, component: FSPComponent<Type, *>) {
             components_[component] = `return`
