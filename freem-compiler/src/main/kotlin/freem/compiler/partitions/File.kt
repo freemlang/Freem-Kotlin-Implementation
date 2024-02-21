@@ -1,7 +1,7 @@
 package freem.compiler.partitions
 
 import libfsp.components.FSPTypedPattern
-import libfsp.components.contexts.FSPPatternInitializeDispatchReceiver
+import libfsp.components.contexts.FSPPatternInitializeDispatcher
 import libfsp.reference.FSPValue
 
 class File private constructor(
@@ -11,41 +11,37 @@ class File private constructor(
     val classes: List<Class>
 ) {
     companion object: FSPTypedPattern<Char, File>() {
-        override fun FSPPatternInitializeDispatchReceiver<Char>.initialize(): FSPValue<File> {
+        override fun FSPPatternInitializeDispatcher<Char>.initialize(): FSPValue<File> {
             `|?`
 
-            next = const("package")
+            "package".queue()
             ` `
-            val `package`: FSPValue<Package>
-            next = Package.also { `package` = it.fspvalue }
+            val `package` by Package.queue()
 
             `|`
 
-            next = const("import")
+            "import".queue()
             ` `
-            val imports: FSPValue<List<Package>>
-            next = Package.lazyRepeat(0, null).also { imports = it.fspvalue }
+            val imports by Package.lazyRepeat(0, null).queue()
 
             `|`
 
             val classes = value { mutableListOf<Class>() }
             val functions = value { mutableListOf<Function>() }
 
-            next = group {
-                next = switch {
-                    case = group {
-                        val `class`: FSPValue<Class>
-                        next = Class.also { `class` = it.fspvalue }
+            group {
+                switch {
+                    group {
+                        val `class` by Class.queue()
                         task { classes.value.add(`class`.value) }
-                    }
-                    case = group {
-                        val function: FSPValue<Function>
-                        next = Function.also { function = it.fspvalue }
+                    }.queue()
+                    group {
+                        val function by Function.queue()
                         task { functions.value.add(function.value) }
-                    }
-                }
+                    }.queue()
+                }.queue()
                 `|?`
-            }
+            }.queue()
 
             return value {
                 File(

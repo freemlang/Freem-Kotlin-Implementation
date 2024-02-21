@@ -1,7 +1,7 @@
 package freem.compiler.partitions
 
 import libfsp.components.FSPTypedPattern
-import libfsp.components.contexts.FSPPatternInitializeDispatchReceiver
+import libfsp.components.contexts.FSPPatternInitializeDispatcher
 import libfsp.reference.FSPValue
 
 class Class private constructor(
@@ -10,21 +10,18 @@ class Class private constructor(
     val factor: Factor,
 ) {
     companion object: FSPTypedPattern<Char, Class>() {
-        override fun FSPPatternInitializeDispatchReceiver<Char>.initialize(): FSPValue<Class> {
-            val modifier: FSPValue<AccessModifier>
-            next = AccessModifier.also { modifier = it.fspvalue }
+        override fun FSPPatternInitializeDispatcher<Char>.initialize(): FSPValue<Class> {
+            val modifier by AccessModifier.queue()
             ` `
-            next = const("class")
+            "class".queue()
             ` `
-            val name: FSPValue<Identifier>
-            next = Identifier.also { name = it.fspvalue }
+            val name by Identifier.queue()
             ` ?`
-            val factor: FSPValue<Factor>
-            next = Factor.also { factor = it.fspvalue }
+            val factor by Factor.queue()
 
-            next = const('{')
+            '{'.queue()
 
-            next = const('}')
+            '}'.queue()
 
             return value {
                 Class(

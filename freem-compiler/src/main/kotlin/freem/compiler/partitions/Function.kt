@@ -1,41 +1,41 @@
 package freem.compiler.partitions
 
 import libfsp.components.FSPTypedPattern
-import libfsp.components.contexts.FSPPatternInitializeDispatchReceiver
+import libfsp.components.contexts.FSPPatternInitializeDispatcher
 import libfsp.reference.FSPValue
 
 class Function private constructor(val name: Identifier, val returnType: Type) {
     companion object: FSPTypedPattern<Char, Function>() {
-        override fun FSPPatternInitializeDispatchReceiver<Char>.initialize(): FSPValue<Function> {
-            next = AccessModifier
+        override fun FSPPatternInitializeDispatcher<Char>.initialize(): FSPValue<Function> {
+            AccessModifier.queue()
             ` `
-            next = switch {
-                case = const("infix")
-                case = const("inline")
-            }.optional()
+            switch {
+                "infix".queue()
+                "inline".queue()
+            }.optional().queue()
             ` `
-            next = const("func")
-            next = switch {
-                case = ` `
-                case = group {
+            "func".queue()
+            switch {
+                ` `
+                group {
                     ` ?`
                     // TODO: add partition Generic
                     ` ?`
-                }
-            }
-            val name: FSPValue<Identifier>
-            next = Identifier.also { name = it.fspvalue }
+                }.queue()
+            }.queue()
+            val name by Identifier.queue()
             ` ?`
-            next = Factor
+            Factor.queue()
             ` ?`
             val type: FSPValue<Type>
-            next = group {
-                next = const(':')
+            group {
+                ':'.queue()
                 ` ?`
-                next = Type.also { type = it.fspvalue }
+                val type_ by Type.queue()
+                type = type_
                 ` ?`
-            }.optional()
-            next = CodeBlock
+            }.optional().queue()
+            CodeBlock.queue()
 
             return value { Function(name.value, type.value) }
         }
