@@ -4,35 +4,35 @@ import libfsp.components.FSPTypedPattern
 import libfsp.components.contexts.FSPPatternInitializeDispatcher
 import libfsp.reference.FSPValue
 
-sealed interface JSONData {
-    companion object: FSPTypedPattern<Char, JSONData?>() {
-        override fun FSPPatternInitializeDispatcher<Char>.initialize(): FSPValue<JSONData?> {
+sealed interface JSONValue {
+    companion object: FSPTypedPattern<Char, JSONValue?>() {
+        override fun FSPPatternInitializeDispatcher<Char>.initialize(): FSPValue<JSONValue?> {
             TODO()
         }
     }
 }
 
-val JSONData.asObject: JSONObject get() {
+val JSONValue.asObject: JSONObject get() {
     check(this is JSONObject) { "data is not object" }
     return this
 }
 
-val JSONData.asNumber: JSONNumber get() {
+val JSONValue.asNumber: JSONNumber get() {
     check(this is JSONNumber) { "data is not number" }
     return this
 }
 
-val JSONData.asArray: JSONArray get() {
+val JSONValue.asArray: JSONArray get() {
     check(this is JSONArray) { "data is not array" }
     return this
 }
 
-val JSONData.asBoolean: JSONBoolean get() {
+val JSONValue.asBoolean: JSONBoolean get() {
     check(this is JSONBoolean) { "data is not boolean" }
     return this
 }
 
-val JSONData.asString: JSONString get() {
+val JSONValue.asString: JSONString get() {
     check(this is JSONString) { "data is not string" }
     return this
 }

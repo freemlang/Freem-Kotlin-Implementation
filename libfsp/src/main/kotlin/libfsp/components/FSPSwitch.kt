@@ -1,9 +1,8 @@
 package libfsp.components
 
 import freem.utilities.collections.trie.toTrie
-import freem.utilities.collections.trie.trieOf
 
-class FSPSwitch<Type> internal constructor(components: List<FSPComponent<Type, *>>): FSPComponent<Type, List<Type>> {
+class FSPSwitch<Type, Return> internal constructor(components: List<FSPComponent<Type, *>>): FSPComponent<Type, Return> {
     internal val components: List<FSPComponent<Type, *>>
 
     init {
@@ -31,7 +30,6 @@ class FSPSwitch<Type> internal constructor(components: List<FSPComponent<Type, *
                         is FSPStaticRepeat<*, *> -> TODO()
                         is FSPSwitch -> TODO()
                         is FSPLambdaTask -> TODO()
-                        is FSPTypedSwitch -> TODO()
                     }
                 }
                 consecutiveComponentBuffer.clear()

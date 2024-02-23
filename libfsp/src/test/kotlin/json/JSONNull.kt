@@ -1,3 +1,3 @@
 package json
 
-data object JSONNull: JSONData
+data object JSONNull: JSONValue

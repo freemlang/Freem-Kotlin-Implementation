@@ -8,7 +8,7 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
-open class FSPComponentConstructDispatcher<Type> {
+open class FSPComponentConstructDispatcher<Type> internal constructor() {
     context(FSPComponentConstructDispatcher<Type>)
     fun const(content: Type): FSPConstant<Type> {
         return FSPConstant(listOf(content))
@@ -31,18 +31,25 @@ open class FSPComponentConstructDispatcher<Type> {
 
     context(FSPComponentConstructDispatcher<Type>)
     @OptIn(ExperimentalContracts::class)
-    fun group(constructor: context(FSPPatternInitializeDispatcher<Type>) () -> Unit): FSPGroup<Type> {
+    fun group(constructor: context(FSPPatternInitializeDispatcher<Type>) () -> Unit): FSPGroup<Type, List<Type>> {
         contract { callsInPlace(constructor, InvocationKind.EXACTLY_ONCE) }
-        val dispatcher = FSPPatternInitializeDispatcher<Type>()
-        constructor(dispatcher)
-        val components = dispatcher.components
+        val components = FSPPatternInitializeDispatcher(constructor)
         check(components.isNotEmpty()) { "group is empty" }
         return FSPGroup(components)
     }
 
     context(FSPComponentConstructDispatcher<Type>)
     @OptIn(ExperimentalContracts::class)
-    fun switch(constructor: context(FSPPatternInitializeDispatcher<Type>) () -> Unit): FSPSwitch<Type> {
+    @Suppress("INAPPLICABLE_JVM_NAME")
+    @JvmName("valueGroup")
+    fun <Return> group(condition: context(FSPPatternInitializeDispatcher<Type>) () -> FSPValue<Return>): FSPGroup<Type, Return> {
+        contract { callsInPlace(condition, InvocationKind.EXACTLY_ONCE) }
+        TODO()
+    }
+
+    context(FSPComponentConstructDispatcher<Type>)
+    @OptIn(ExperimentalContracts::class)
+    fun switch(constructor: context(FSPPatternInitializeDispatcher<Type>) () -> Unit): FSPSwitch<Type, List<Type>> {
         contract { callsInPlace(constructor, InvocationKind.EXACTLY_ONCE) }
         TODO()
     }
@@ -50,8 +57,8 @@ open class FSPComponentConstructDispatcher<Type> {
     context(FSPComponentConstructDispatcher<Type>)
     @OptIn(ExperimentalContracts::class)
     @Suppress("INAPPLICABLE_JVM_NAME")
-    @JvmName("typedSwitch")
-    fun <Return> switch(constructor: context(FSPTypedSwitchConstructDispatcher<Type, Return>) () -> Unit): FSPTypedSwitch<Type, Return> {
+    @JvmName("valueSwitch")
+    fun <Return> switch(constructor: context(FSPTypedSwitchConstructDispatcher<Type, Return>) () -> Unit): FSPSwitch<Type, Return> {
         contract { callsInPlace(constructor, InvocationKind.EXACTLY_ONCE) }
         TODO()
     }

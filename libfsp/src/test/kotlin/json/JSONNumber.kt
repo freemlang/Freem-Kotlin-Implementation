@@ -1,6 +1,6 @@
 package json
 
-class JSONNumber(private val rawValue: String): JSONData {
+class JSONNumber(private val rawValue: String): JSONValue {
     val asByte: Byte get() = rawValue.toByte()
     val asShort: Short get() = rawValue.toShort()
     val asInt: Int get() = rawValue.toInt()

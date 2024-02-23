@@ -6,19 +6,29 @@ import libfsp.reference.FSPReferenceDispatcher
 import libfsp.reference.FSPValue
 import kotlin.reflect.KProperty
 
-class FSPPatternInitializeDispatcher<Type> internal constructor(components: MutableList<FSPComponent<Type, *>>): FSPComponentConstructDispatcher<Type>() {
+class FSPPatternInitializeDispatcher<Type> private constructor(): FSPComponentConstructDispatcher<Type>() {
 
-    internal constructor(): this(mutableListOf())
+    internal companion object {
+        operator fun <Type> invoke(context: context(FSPPatternInitializeDispatcher<Type>) () -> Unit): List<FSPComponent<Type, *>> {
+            val dispatcher = FSPPatternInitializeDispatcher<Type>()
+            context(dispatcher)
+            val components = dispatcher.components.toList()
+            dispatcher.components.clear()
+            return components
+        }
+    }
 
-    internal val components: List<FSPComponent<Type, *>> get() = components_.toList()
-    private val components_: MutableList<FSPComponent<Type, *>> = components
+    private val components: MutableList<FSPComponent<Type, *>> = mutableListOf()
 
     context(FSPPatternInitializeDispatcher<Type>)
-    fun <Return> FSPComponent<Type, Return>.queue(): FSPValueDelegate<Type, Return> { TODO() }
+    fun <Return> FSPComponent<Type, Return>.queue(): FSPValueDelegate<Type, Return> {
+        components.add(this)
+        return TODO()
+    }
 
     context(FSPPatternInitializeDispatcher<Type>)
     fun task(task: context(FSPReferenceDispatcher) () -> Unit) {
-        components_.add(FSPLambdaTask { task(FSPReferenceDispatcher()) })
+        components.add(FSPLambdaTask { task(FSPReferenceDispatcher()) })
     }
 
     context(FSPPatternInitializeDispatcher<Type>)

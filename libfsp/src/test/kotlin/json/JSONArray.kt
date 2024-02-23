@@ -4,14 +4,14 @@ import libfsp.components.FSPTypedPattern
 import libfsp.components.contexts.FSPPatternInitializeDispatcher
 import libfsp.reference.FSPValue
 
-data class JSONArray(internal val array: Array<JSONData>): JSONData {
+data class JSONArray(internal val array: Array<JSONValue>): JSONValue {
     companion object: FSPTypedPattern<Char, JSONArray>() {
         override fun FSPPatternInitializeDispatcher<Char>.initialize(): FSPValue<JSONArray> {
-            val buffer = value { mutableListOf<JSONData>() }
+            val buffer = value { mutableListOf<JSONValue>() }
             queue = const('[')
             space
-            val firstItem: FSPValue<JSONData?>
-            queue = JSONData.optional().also { firstItem = it.fspvalue }
+            val firstItem: FSPValue<JSONValue?>
+            queue = JSONValue.optional().also { firstItem = it.fspvalue }
             task {
                 if (firstItem.value != null) {
                     buffer.value.add(firstItem.value!!)
@@ -20,8 +20,8 @@ data class JSONArray(internal val array: Array<JSONData>): JSONData {
             queue = group {
                 queue = const(',')
                 space
-                val item: FSPValue<JSONData?>
-                queue = JSONData.also { item = it.fspvalue }
+                val item: FSPValue<JSONValue?>
+                queue = JSONValue.also { item = it.fspvalue }
                 task {
                     if (item.value != null) {
                         buffer.value.add(item.value!!)
