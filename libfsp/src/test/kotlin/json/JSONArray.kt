@@ -1,43 +1,31 @@
 package json
 
 import libfsp.components.FSPTypedPattern
-import libfsp.components.contexts.FSPPatternInitializeDispatcher
+import libfsp.components.contexts.FSPComponentListConstructDispatcher
 import libfsp.reference.FSPValue
 
-data class JSONArray(internal val array: Array<JSONValue>): JSONValue {
+class JSONArray(private val list: List<JSONValue>): JSONValue, List<JSONValue> by list {
     companion object: FSPTypedPattern<Char, JSONArray>() {
-        override fun FSPPatternInitializeDispatcher<Char>.initialize(): FSPValue<JSONArray> {
-            val buffer = value { mutableListOf<JSONValue>() }
-            queue = const('[')
+        override fun initialize(): context(FSPComponentListConstructDispatcher<Char>) () -> FSPValue<JSONArray> = {
+            '['.queue()
             space
-            val firstItem: FSPValue<JSONValue?>
-            queue = JSONValue.optional().also { firstItem = it.fspvalue }
-            task {
-                if (firstItem.value != null) {
-                    buffer.value.add(firstItem.value!!)
-                }
-            }
-            queue = group {
-                queue = const(',')
+            val firstItem by JSONValue.optional().queue()
+            val items by group<JSONValue> {
+                ','.queue()
                 space
-                val item: FSPValue<JSONValue?>
-                queue = JSONValue.also { item = it.fspvalue }
-                task {
-                    if (item.value != null) {
-                        buffer.value.add(item.value!!)
-                    }
-                }
+                val item by JSONValue.queue()
                 space
-            }.greedyRepeat(0, null)
-            queue = group {
-                queue = const(',')
+                item
+            }.greedyRepeat(0, null).queue()
+            group {
+                ','.queue()
                 space
-            }.optional()
-            queue = const(']')
-            return value {
-                val array = buffer.value.toTypedArray()
-                buffer.value.clear()
-                return@value JSONArray(array)
+            }.optional().queue()
+            ']'.queue()
+            value {
+                val list = items.value.toMutableList()
+                list.addFirst(firstItem.value)
+                return@value JSONArray(list)
             }
         }
     }
@@ -48,10 +36,10 @@ data class JSONArray(internal val array: Array<JSONValue>): JSONValue {
 
         other as JSONArray
 
-        return array.contentEquals(other.array)
+        return list == other.list
     }
 
     override fun hashCode(): Int {
-        return array.contentHashCode()
+        return list.hashCode()
     }
 }

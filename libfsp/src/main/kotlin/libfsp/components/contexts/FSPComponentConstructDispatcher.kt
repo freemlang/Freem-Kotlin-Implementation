@@ -3,25 +3,26 @@ package libfsp.components.contexts
 import libfsp.components.*
 import libfsp.reference.FSPReferenceDispatcher
 import libfsp.reference.FSPValue
-import libfsp.reference.FSPVariance
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 open class FSPComponentConstructDispatcher<Type> internal constructor() {
+
     context(FSPComponentConstructDispatcher<Type>)
-    fun const(content: Type): FSPConstant<Type> {
-        return FSPConstant(listOf(content))
+    fun const(contents: List<Type>): FSPConstant<Type> {
+        check(contents.isNotEmpty()) { "value is empty" }
+        return FSPConstant(contents)
     }
 
     context(FSPComponentConstructDispatcher<Type>)
     fun const(vararg content: Type): FSPConstant<Type> {
-        return FSPConstant(content.toList())
+        return const(content.toList())
     }
 
-    context(FSPComponentConstructDispatcher<Type>)
+    context(FSPComponentConstructDispatcher<Char>)
     fun const(content: String): FSPConstant<Char> {
-        return FSPConstant(content.toList())
+        return const(content.toList())
     }
 
     context(FSPComponentConstructDispatcher<Type>)
@@ -31,27 +32,77 @@ open class FSPComponentConstructDispatcher<Type> internal constructor() {
 
     context(FSPComponentConstructDispatcher<Type>)
     @OptIn(ExperimentalContracts::class)
-    fun group(constructor: context(FSPPatternInitializeDispatcher<Type>) () -> Unit): FSPGroup<Type, List<Type>> {
+    fun group(constructor: context(FSPComponentListConstructDispatcher<Type>) () -> Unit): FSPGroup<Type, List<Type>> {
         contract { callsInPlace(constructor, InvocationKind.EXACTLY_ONCE) }
-        val components = FSPPatternInitializeDispatcher(constructor)
-        check(components.isNotEmpty()) { "group is empty" }
-        return FSPGroup(components)
+        val components = mutableListOf<FSPComponent<Type, *>>()
+        val dispatcher = FSPComponentListConstructDispatcher(components)
+        constructor(dispatcher)
+        val fixedDispatcher = FSPComponentListConstructDispatcher.combineConsecutiveConstants(components)
+        components.clear()
+        return FSPGroup(fixedDispatcher)
     }
 
     context(FSPComponentConstructDispatcher<Type>)
     @OptIn(ExperimentalContracts::class)
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueGroup")
-    fun <Return> group(condition: context(FSPPatternInitializeDispatcher<Type>) () -> FSPValue<Return>): FSPGroup<Type, Return> {
-        contract { callsInPlace(condition, InvocationKind.EXACTLY_ONCE) }
-        TODO()
+    fun <Return> group(constructor: context(FSPComponentListConstructDispatcher<Type>) () -> FSPValue<Return>): FSPGroup<Type, Return> {
+        contract { callsInPlace(constructor, InvocationKind.EXACTLY_ONCE) }
+        val components = mutableListOf<FSPComponent<Type, *>>()
+        val dispatcher = FSPComponentListConstructDispatcher(components)
+        val returnedValue = constructor(dispatcher)
+        val fixedDispatcher = FSPComponentListConstructDispatcher.combineConsecutiveConstants(components)
+        components.clear()
+        return FSPGroup(fixedDispatcher)
+    }
+
+    fun <Type, Return> optimizeSwitch(components: List<FSPComponent<Type, *>>) {
+        /*
+        val componentBuffer: MutableList<FSPComponent<Type, *>> = mutableListOf()
+        val consecutiveComponentBuffer: MutableList<Pair<FSPComponent<Type, *>, FSPValue<Return>>> = mutableListOf()
+        var beforeComponentClass: Class<*>? = null
+        for (component in components) {
+            val currentComponentClass = component::class.java
+            if (currentComponentClass != beforeComponentClass) {
+                when (consecutiveComponentBuffer.size) {
+                    0 -> {}
+                    1 -> componentBuffer.add(consecutiveComponentBuffer[0])
+                    else -> when (consecutiveComponentBuffer[0]) {
+                        is FSPConstant -> {
+                            @Suppress("UNCHECKED_CAST") (consecutiveComponentBuffer as List<FSPConstant<Type>>)
+                            val trie = consecutiveComponentBuffer.map { it.content }.toTrie()
+
+                        }
+                        is FSPGroup -> TODO()
+                        is FSPJudgement<*> -> TODO()
+                        is FSPOptional -> TODO()
+                        is FSPTypedPattern -> TODO()
+                        is FSPUnitPattern -> TODO()
+                        is FSPDynamicRepeat<*, *> -> TODO()
+                        is FSPStaticRepeat<*, *> -> TODO()
+                        is FSPSwitch -> TODO()
+                        is FSPLambdaTask -> TODO()
+                    }
+                }
+                consecutiveComponentBuffer.clear()
+            }
+            consecutiveComponentBuffer.add(component)
+            beforeComponentClass = currentComponentClass
+        }
+        val result = componentBuffer.toList()
+        componentBuffer.clear()
+        return result
+        */
     }
 
     context(FSPComponentConstructDispatcher<Type>)
     @OptIn(ExperimentalContracts::class)
-    fun switch(constructor: context(FSPPatternInitializeDispatcher<Type>) () -> Unit): FSPSwitch<Type, List<Type>> {
+    fun switch(constructor: context(FSPComponentListConstructDispatcher<Type>) () -> Unit): FSPSwitch<Type, List<Type>> {
         contract { callsInPlace(constructor, InvocationKind.EXACTLY_ONCE) }
-        TODO()
+        val components = mutableListOf<FSPComponent<Type, *>>()
+        val dispatcher = FSPComponentListConstructDispatcher(components)
+        constructor(dispatcher)
+        return FSPSwitch(components.map { it to (null as FSPValue<List<Type>> /*TODO: component's return value*/) })
     }
 
     context(FSPComponentConstructDispatcher<Type>)
@@ -60,32 +111,33 @@ open class FSPComponentConstructDispatcher<Type> internal constructor() {
     @JvmName("valueSwitch")
     fun <Return> switch(constructor: context(FSPTypedSwitchConstructDispatcher<Type, Return>) () -> Unit): FSPSwitch<Type, Return> {
         contract { callsInPlace(constructor, InvocationKind.EXACTLY_ONCE) }
-        TODO()
+        val components = mutableListOf<Pair<FSPComponent<Type, *>, FSPValue<Return>>>()
+        val dispatcher = FSPTypedSwitchConstructDispatcher(components)
+        constructor(dispatcher)
+        return FSPSwitch(components)
     }
 
     context(FSPComponentConstructDispatcher<Type>)
-    fun <Type, Return> FSPComponent<Type, Return>.optional(): FSPOptional<Type, Return> {
-        return FSPOptional(this)
+    fun <Return> FSPComponent<Type, Return>.optional(): FSPOptional<Type, Return> {
+        return FSPOptional(
+            if (this is FSPOptional<Type, *>)
+                @Suppress("UNCHECKED_CAST") (component as FSPComponent<Type, Return>)
+            else this
+        )
     }
 
     context(FSPComponentConstructDispatcher<Type>)
-    fun <Type, Return> FSPComponent<Type, Return>.repeat(times: Int): FSPStaticRepeat<Type, Return> {
+    fun <Return> FSPComponent<Type, Return>.repeat(times: Int): FSPStaticRepeat<Type, Return> {
         return FSPStaticRepeat(times, this)
     }
 
     context(FSPComponentConstructDispatcher<Type>)
-    fun <Type, Return> FSPComponent<Type, Return>.lazyRepeat(min: Int?, max: Int?): FSPDynamicRepeat<Type, Return> {
+    fun <Return> FSPComponent<Type, Return>.lazyRepeat(min: Int?, max: Int?): FSPDynamicRepeat<Type, Return> {
         return FSPDynamicRepeat(min, max, this, FSPDynamicRepeatKind.LAZY)
     }
 
     context(FSPComponentConstructDispatcher<Type>)
-    fun <Type, Return> FSPComponent<Type, Return>.greedyRepeat(min: Int?, max: Int?): FSPDynamicRepeat<Type, Return> {
+    fun <Return> FSPComponent<Type, Return>.greedyRepeat(min: Int?, max: Int?): FSPDynamicRepeat<Type, Return> {
         return FSPDynamicRepeat(min, max, this, FSPDynamicRepeatKind.GREEDY)
     }
-
-    context(FSPComponentConstructDispatcher<Type>)
-    fun <Value> value(initializer: context(FSPReferenceDispatcher) () -> Value): FSPValue<Value> { TODO() }
-
-    context(FSPComponentConstructDispatcher<Type>)
-    fun <Variance> variance(initializer: context(FSPReferenceDispatcher) () -> Variance): FSPVariance<Variance> { TODO() }
 }

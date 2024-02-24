@@ -1,5 +1,7 @@
 package libfsp.components
 
-internal class FSPLambdaTask<Type>(private val task: () -> Unit): FSPTask<Type> {
-    override fun run() = task()
+import libfsp.reference.FSPReferenceDispatcher
+
+internal class FSPLambdaTask<Type>(private val task: (FSPReferenceDispatcher) -> Unit): FSPTask<Type> {
+    override fun run(referenceDispatcher: FSPReferenceDispatcher) = task(referenceDispatcher)
 }

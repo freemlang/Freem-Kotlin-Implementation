@@ -1,21 +1,20 @@
 package freem.compiler.partitions
 
 import libfsp.components.FSPUnitPattern
-import libfsp.components.contexts.FSPPatternInitializeDispatcher
-import libfsp.components.contexts.FSPTypedSwitchConstructDispatcher
+import libfsp.components.contexts.FSPComponentListConstructDispatcher
 
 val ` ` = EmptySpace
 val ` ?` = OptionalEmptySpace
 val `|` = SeparateSpace
 val `|?` = OptionalSeparateSpace
 
-context(FSPPatternInitializeDispatcher<Char>) val ` `: Unit get() { EmptySpace.queue() }
-context(FSPPatternInitializeDispatcher<Char>) val ` ?`: Unit get() { OptionalEmptySpace.queue() }
-context(FSPPatternInitializeDispatcher<Char>) val `|`: Unit get() { SeparateSpace.queue() }
-context(FSPPatternInitializeDispatcher<Char>) val `|?`: Unit get() { OptionalSeparateSpace.queue() }
+context(FSPComponentListConstructDispatcher<Char>) val ` `: Unit get() { EmptySpace.queue() }
+context(FSPComponentListConstructDispatcher<Char>) val ` ?`: Unit get() { OptionalEmptySpace.queue() }
+context(FSPComponentListConstructDispatcher<Char>) val `|`: Unit get() { SeparateSpace.queue() }
+context(FSPComponentListConstructDispatcher<Char>) val `|?`: Unit get() { OptionalSeparateSpace.queue() }
 
 object EmptySpace: FSPUnitPattern<Char>() {
-    override fun FSPPatternInitializeDispatcher<Char>.initialize() {
+    override fun FSPComponentListConstructDispatcher<Char>.initialize() {
         switch {
             judge(Char::isWhitespace).lazyRepeat(1, null).queue()
             Comment.queue()
@@ -24,13 +23,13 @@ object EmptySpace: FSPUnitPattern<Char>() {
 }
 
 object OptionalEmptySpace: FSPUnitPattern<Char>() {
-    override fun FSPPatternInitializeDispatcher<Char>.initialize() {
+    override fun FSPComponentListConstructDispatcher<Char>.initialize() {
         EmptySpace.optional().queue()
     }
 }
 
 object SeparateSpace: FSPUnitPattern<Char>() {
-    override fun FSPPatternInitializeDispatcher<Char>.initialize() {
+    override fun FSPComponentListConstructDispatcher<Char>.initialize() {
         switch {
             EmptySpace.queue()
             ';'.queue()
@@ -39,7 +38,7 @@ object SeparateSpace: FSPUnitPattern<Char>() {
 }
 
 object OptionalSeparateSpace: FSPUnitPattern<Char>() {
-    override fun FSPPatternInitializeDispatcher<Char>.initialize() {
+    override fun FSPComponentListConstructDispatcher<Char>.initialize() {
         SeparateSpace.optional().queue()
     }
 }

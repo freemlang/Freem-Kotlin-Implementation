@@ -1,7 +1,7 @@
 package freem.compiler.partitions
 
 import libfsp.components.FSPTypedPattern
-import libfsp.components.contexts.FSPPatternInitializeDispatcher
+import libfsp.components.contexts.FSPComponentListConstructDispatcher
 import libfsp.reference.FSPValue
 
 class File private constructor(
@@ -11,7 +11,7 @@ class File private constructor(
     val classes: List<Class>
 ) {
     companion object: FSPTypedPattern<Char, File>() {
-        override fun FSPPatternInitializeDispatcher<Char>.initialize(): FSPValue<File> {
+        override fun FSPComponentListConstructDispatcher<Char>.initialize(): FSPValue<File> {
             `|?`
 
             "package".queue()

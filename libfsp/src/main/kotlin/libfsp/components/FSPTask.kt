@@ -1,5 +1,7 @@
 package libfsp.components
 
-internal sealed interface FSPTask<Type>: FSPComponent<Type, Nothing> {
-    fun run()
+import libfsp.reference.FSPReferenceDispatcher
+
+internal interface FSPTask<Type>: FSPComponent<Type, Nothing> {
+    fun run(referenceDispatcher: FSPReferenceDispatcher)
 }

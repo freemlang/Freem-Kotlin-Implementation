@@ -1,22 +1,22 @@
 package json
 
 import libfsp.components.FSPTypedPattern
-import libfsp.components.contexts.FSPPatternInitializeDispatcher
+import libfsp.components.contexts.FSPComponentListConstructDispatcher
 import libfsp.components.contexts.asString
 import libfsp.reference.FSPValue
 
-class JSONString: JSONValue {
+class JSONString private constructor(internal val string: String): JSONValue {
     companion object: FSPTypedPattern<Char, JSONString>() {
-        override fun FSPPatternInitializeDispatcher<Char>.initialize(): FSPValue<JSONString> {
+        override fun FSPComponentListConstructDispatcher<Char>.initialize(): FSPValue<JSONString> {
             '"'.queue()
-            switch<Char> {
-                judge { it != '\n' && it != '\\' }.queue()
+            val charList by switch<Char> {
+                judge { it != '\n' && it != '\\' }.autoQueue()
                 group<Char> {
                     '\\'.queue()
                     val char by switch<Char> {
-                        '"'.queue()
-                        '\\'.queue()
-                        '/'.queue()
+                        '"'.autoQueue()
+                        '\\'.autoQueue()
+                        '/'.autoQueue()
                         'b'.queue { '\b' }
                         'f'.queue { '\u000c' }
                         'n'.queue { '\n' }
@@ -26,15 +26,13 @@ class JSONString: JSONValue {
                             'u'.queue()
                             val code by judge { it in '0'..'9' || it in 'a'..'f' || it in 'A'..'F' }.repeat(4).queue().asString
                             value { Char(code.value.toInt(16)) }
-                        }.queue()
+                        }.autoQueue()
                     }.queue()
                     char
-                }.queue()
+                }.autoQueue()
             }.lazyRepeat(0, null).queue()
             '"'.queue()
-            return value {
-                JSONString()
-            }
+            return value { JSONString(charList.value.joinToString("")) }
         }
     }
 }
