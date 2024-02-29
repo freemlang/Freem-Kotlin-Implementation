@@ -1,7 +1,6 @@
 package libfsp.components.contexts
 
 import libfsp.components.*
-import libfsp.reference.FSPReferenceDispatcher
 import libfsp.reference.FSPValue
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
@@ -76,8 +75,8 @@ open class FSPComponentConstructDispatcher<Type> internal constructor() {
                         is FSPGroup -> TODO()
                         is FSPJudgement<*> -> TODO()
                         is FSPOptional -> TODO()
-                        is FSPTypedPattern -> TODO()
-                        is FSPUnitPattern -> TODO()
+                        is FSPTypedComponent -> TODO()
+                        is FSPUnitComponent -> TODO()
                         is FSPDynamicRepeat<*, *> -> TODO()
                         is FSPStaticRepeat<*, *> -> TODO()
                         is FSPSwitch -> TODO()

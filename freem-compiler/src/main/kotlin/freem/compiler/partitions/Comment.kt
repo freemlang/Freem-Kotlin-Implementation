@@ -1,10 +1,9 @@
 package freem.compiler.partitions
 
 import libfsp.components.contexts.FSPComponentListConstructDispatcher
-import libfsp.components.FSPUnitPattern
 
-sealed class Comment: FSPUnitPattern<Char>() {
-    companion object: FSPUnitPattern<Char>() {
+sealed class Comment: FSPUnitComponent<Char>() {
+    companion object: FSPUnitComponent<Char>() {
         override fun FSPComponentListConstructDispatcher<Char>.initialize() {
             switch {
                 Inline.queue()

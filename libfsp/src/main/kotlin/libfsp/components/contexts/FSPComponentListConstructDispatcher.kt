@@ -3,42 +3,12 @@ package libfsp.components.contexts
 import libfsp.components.FSPComponent
 import libfsp.components.FSPConstant
 import libfsp.components.FSPLambdaTask
-import libfsp.reference.FSPReferenceDispatcher
-import libfsp.reference.FSPValue
-import libfsp.reference.FSPVariance
+import libfsp.reference.*
 import kotlin.reflect.KProperty
 
 class FSPComponentListConstructDispatcher<Type> internal constructor(
     private val components: MutableList<FSPComponent<Type, *>>
 ): FSPComponentConstructDispatcher<Type>() {
-
-    internal companion object {
-        fun <Type> combineConsecutiveConstants(components: List<FSPComponent<Type, *>>): List<FSPComponent<Type, *>> {
-            val componentBuffer = mutableListOf<FSPComponent<Type, *>>()
-            if (components.isEmpty()) throw IllegalStateException("group is empty")
-            else if (components.size > 1) {
-                val constBuffer = mutableListOf<Type>()
-                fun uploadBuffer() {
-                    if (constBuffer.isNotEmpty()) {
-                        componentBuffer.add(FSPConstant(constBuffer.toList()))
-                        constBuffer.clear()
-                    }
-                }
-                for (component in components) {
-                    if (component is FSPConstant) {
-                        constBuffer.addAll(component.content)
-                        continue
-                    }
-                    uploadBuffer()
-                    componentBuffer.add(component)
-                }
-                uploadBuffer()
-            }
-            val result = componentBuffer.toList()
-            componentBuffer.clear()
-            return result
-        }
-    }
 
     context(FSPComponentListConstructDispatcher<Type>)
     fun <Return> FSPComponent<Type, Return>.queue(): FSPValueDelegate<Type, Return> {
@@ -54,14 +24,28 @@ class FSPComponentListConstructDispatcher<Type> internal constructor(
 
     context(FSPComponentListConstructDispatcher<Type>)
     fun task(task: context(FSPReferenceDispatcher) () -> Unit) {
-        components.add(FSPLambdaTask { dispatcher -> task(dispatcher) })
+        components.add(FSPLambdaTask { _, dispatcher -> task(dispatcher) })
     }
 
     context(FSPComponentConstructDispatcher<Type>)
-    fun <Value> value(initializer: context(FSPReferenceDispatcher) () -> Value): FSPValue<Value> { TODO() }
+    fun <Value> value(initializer: context(FSPReferenceDispatcher) () -> Value): FSPValue<Value> {
+        return newReference(initializer)
+    }
 
     context(FSPComponentConstructDispatcher<Type>)
-    fun <Variance> variance(initializer: context(FSPReferenceDispatcher) () -> Variance): FSPVariance<Variance> { TODO() }
+    fun <Variance> variance(initializer: context(FSPReferenceDispatcher) () -> Variance): FSPVariance<Variance> {
+        return newReference(initializer)
+    }
+
+    private fun <Type> newReference(initializer: context(FSPReferenceDispatcher) () -> Type): FSPReference<Type> {
+        val reference = FSPReference<Type>()
+        components.add(
+            FSPLambdaTask { uuid, dispatcher ->
+                reference.register(uuid, initializer(dispatcher))
+            }
+        )
+        return reference
+    }
 }
 
 class FSPValueDelegate<Type, Return> {

@@ -1,6 +1,5 @@
 package freem.compiler.partitions
 
-import libfsp.components.FSPUnitPattern
 import libfsp.components.contexts.FSPComponentListConstructDispatcher
 
 val ` ` = EmptySpace
@@ -13,7 +12,7 @@ context(FSPComponentListConstructDispatcher<Char>) val ` ?`: Unit get() { Option
 context(FSPComponentListConstructDispatcher<Char>) val `|`: Unit get() { SeparateSpace.queue() }
 context(FSPComponentListConstructDispatcher<Char>) val `|?`: Unit get() { OptionalSeparateSpace.queue() }
 
-object EmptySpace: FSPUnitPattern<Char>() {
+object EmptySpace: FSPUnitComponent<Char>() {
     override fun FSPComponentListConstructDispatcher<Char>.initialize() {
         switch {
             judge(Char::isWhitespace).lazyRepeat(1, null).queue()
@@ -22,13 +21,13 @@ object EmptySpace: FSPUnitPattern<Char>() {
     }
 }
 
-object OptionalEmptySpace: FSPUnitPattern<Char>() {
+object OptionalEmptySpace: FSPUnitComponent<Char>() {
     override fun FSPComponentListConstructDispatcher<Char>.initialize() {
         EmptySpace.optional().queue()
     }
 }
 
-object SeparateSpace: FSPUnitPattern<Char>() {
+object SeparateSpace: FSPUnitComponent<Char>() {
     override fun FSPComponentListConstructDispatcher<Char>.initialize() {
         switch {
             EmptySpace.queue()
@@ -37,7 +36,7 @@ object SeparateSpace: FSPUnitPattern<Char>() {
     }
 }
 
-object OptionalSeparateSpace: FSPUnitPattern<Char>() {
+object OptionalSeparateSpace: FSPUnitComponent<Char>() {
     override fun FSPComponentListConstructDispatcher<Char>.initialize() {
         SeparateSpace.optional().queue()
     }

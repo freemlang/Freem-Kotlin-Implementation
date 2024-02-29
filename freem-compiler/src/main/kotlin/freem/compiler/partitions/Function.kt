@@ -1,11 +1,10 @@
 package freem.compiler.partitions
 
-import libfsp.components.FSPTypedPattern
 import libfsp.components.contexts.FSPComponentListConstructDispatcher
 import libfsp.reference.FSPValue
 
 class Function private constructor(val name: Identifier, val returnType: Type) {
-    companion object: FSPTypedPattern<Char, Function>() {
+    companion object: FSPTypedComponent<Char, Function>() {
         override fun FSPComponentListConstructDispatcher<Char>.initialize(): FSPValue<Function> {
             AccessModifier.queue()
             ` `

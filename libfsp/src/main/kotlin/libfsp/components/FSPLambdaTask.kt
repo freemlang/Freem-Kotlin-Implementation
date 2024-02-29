@@ -1,7 +1,10 @@
 package libfsp.components
 
 import libfsp.reference.FSPReferenceDispatcher
+import java.util.UUID
 
-internal class FSPLambdaTask<Type>(private val task: (FSPReferenceDispatcher) -> Unit): FSPTask<Type> {
-    override fun run(referenceDispatcher: FSPReferenceDispatcher) = task(referenceDispatcher)
+internal class FSPLambdaTask<Type, Return>(private val task: (UUID, FSPReferenceDispatcher) -> Return): FSPTask<Type, Return> {
+    override fun run(uuid: UUID, referenceDispatcher: FSPReferenceDispatcher) {
+        task(uuid, referenceDispatcher)
+    }
 }

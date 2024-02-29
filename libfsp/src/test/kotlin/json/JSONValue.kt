@@ -1,11 +1,11 @@
 package json
 
-import libfsp.components.FSPTypedPattern
+import libfsp.components.FSPTypedComponent
 import libfsp.components.contexts.FSPComponentListConstructDispatcher
 import libfsp.reference.FSPValue
 
 sealed interface JSONValue {
-    companion object: FSPTypedPattern<Char, JSONValue>() {
+    companion object: FSPTypedComponent<Char, JSONValue>() {
         override fun FSPComponentListConstructDispatcher<Char>.initialize(): FSPValue<JSONValue> {
             TODO()
         }

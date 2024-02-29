@@ -1,6 +1,6 @@
 package json
 
-import libfsp.components.FSPTypedPattern
+import libfsp.components.FSPTypedComponent
 import libfsp.components.contexts.FSPComponentListConstructDispatcher
 import libfsp.reference.FSPValue
 
@@ -10,7 +10,7 @@ sealed interface JSONObject: JSONValue, Map<String, JSONValue> {
 sealed interface JSONMutableObject: JSONObject, MutableMap<String, JSONValue>
 
 internal class JSONHashObject(private val map: MutableMap<String, JSONValue>): JSONMutableObject, MutableMap<String, JSONValue> by map {
-    companion object: FSPTypedPattern<Char, JSONObject>() {
+    companion object: FSPTypedComponent<Char, JSONObject>() {
         override fun FSPComponentListConstructDispatcher<Char>.initialize(): FSPValue<JSONObject> {
             '{'.queue()
             space

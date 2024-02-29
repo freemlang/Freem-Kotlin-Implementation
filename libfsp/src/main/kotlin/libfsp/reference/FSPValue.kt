@@ -1,14 +1,7 @@
 package libfsp.reference
 
-import java.util.UUID
+import java.util.*
 
 sealed class FSPValue<Type> {
-    protected abstract val valuePool: MutableMap<UUID, Type>
-    internal fun register(uuid: UUID, value: Type) {
-        if (valuePool.containsKey(uuid)) throw IllegalArgumentException("value already exist")
-        valuePool[uuid] = value
-    }
-    internal fun get(uuid: UUID): Type {
-        return valuePool.getValue(uuid)
-    }
+    internal abstract fun get(uuid: UUID): Type
 }

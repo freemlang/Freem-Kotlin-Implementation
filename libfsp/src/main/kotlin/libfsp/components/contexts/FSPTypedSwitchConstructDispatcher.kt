@@ -1,17 +1,32 @@
 package libfsp.components.contexts
 
 import libfsp.components.FSPComponent
+import libfsp.components.FSPGroup
+import libfsp.components.FSPLambdaTask
+import libfsp.reference.FSPReference
 import libfsp.reference.FSPReferenceDispatcher
-import libfsp.reference.FSPValue
 
 class FSPTypedSwitchConstructDispatcher<Type, Return> internal constructor(
-    private val components: MutableList<Pair<FSPComponent<Type, *>, FSPValue<Return>>>
+    private val components: MutableList<FSPComponent<Type, Return>>
 ): FSPComponentConstructDispatcher<Type>() {
 
     context(FSPTypedSwitchConstructDispatcher<Type, Return>)
-    fun <Return> FSPComponent<Type, *>.queue(
+    fun FSPComponent<Type, *>.queue(
         `return`: Return
-    ) { TODO() }
+    ) {
+        val returnReference = FSPReference<Return>()
+        components.add(
+            FSPGroup(
+                listOf(
+                    FSPLambdaTask { uuid, _ ->
+                        returnReference.register(uuid, `return`)
+                    },
+                    this
+                ),
+                returnReference
+            )
+        )
+    }
 
     context(FSPTypedSwitchConstructDispatcher<Type, Return>)
     fun ((Type) -> Boolean).queue(

@@ -1,12 +1,13 @@
 package json
 
-import libfsp.components.FSPTypedPattern
+import libfsp.components.FSPTypedComponent
 import libfsp.components.contexts.FSPComponentListConstructDispatcher
+import libfsp.components.fspnew
 import libfsp.reference.FSPValue
 
 class JSONArray(private val list: List<JSONValue>): JSONValue, List<JSONValue> by list {
-    companion object: FSPTypedPattern<Char, JSONArray>() {
-        override fun initialize(): context(FSPComponentListConstructDispatcher<Char>) () -> FSPValue<JSONArray> = {
+    companion object: FSPTypedComponent<Char, JSONArray>() {
+        override fun FSPComponentListConstructDispatcher<Char>.initialize(): FSPValue<JSONArray> {
             '['.queue()
             space
             val firstItem by JSONValue.optional().queue()
@@ -22,7 +23,7 @@ class JSONArray(private val list: List<JSONValue>): JSONValue, List<JSONValue> b
                 space
             }.optional().queue()
             ']'.queue()
-            value {
+            return value {
                 val list = items.value.toMutableList()
                 list.addFirst(firstItem.value)
                 return@value JSONArray(list)

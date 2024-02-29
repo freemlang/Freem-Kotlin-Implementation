@@ -1,6 +1,5 @@
 package freem.compiler.partitions
 
-import libfsp.components.FSPTypedPattern
 import libfsp.components.contexts.FSPComponentListConstructDispatcher
 import libfsp.reference.FSPValue
 
@@ -9,7 +8,7 @@ class Class private constructor(
     val modifier: AccessModifier,
     val factor: Factor,
 ) {
-    companion object: FSPTypedPattern<Char, Class>() {
+    companion object: FSPTypedComponent<Char, Class>() {
         override fun FSPComponentListConstructDispatcher<Char>.initialize(): FSPValue<Class> {
             val modifier by AccessModifier.queue()
             ` `
