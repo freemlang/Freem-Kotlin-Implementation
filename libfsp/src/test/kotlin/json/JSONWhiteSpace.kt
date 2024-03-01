@@ -1,15 +1,15 @@
 package json
 
 import libfsp.components.FSPUnitComponent
-import libfsp.components.contexts.FSPComponentListConstructDispatcher
+import libfsp.components.contexts.FSPEntityConstructDispatcher
 
 internal object JSONWhiteSpace: FSPUnitComponent<Char>() {
-    override fun FSPComponentListConstructDispatcher<Char>.initialize() {
+    override fun FSPEntityConstructDispatcher<Char>.initialize() {
         judge(Char::isWhitespace).greedyRepeat(0, null).queue()
     }
 }
 
-context(FSPComponentListConstructDispatcher<Char>)
+context(FSPEntityConstructDispatcher<Char>)
 internal val space: Unit get() {
     JSONWhiteSpace.queue()
 }

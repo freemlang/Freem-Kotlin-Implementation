@@ -1,11 +1,11 @@
 package freem.compiler.partitions
 
-import libfsp.components.contexts.FSPComponentListConstructDispatcher
+import libfsp.components.contexts.FSPEntityConstructDispatcher
 import libfsp.reference.FSPValue
 
 class Factor {
     companion object: FSPTypedComponent<Char, Factor>() {
-        override fun FSPComponentListConstructDispatcher<Char>.initialize(): FSPValue<Factor> {
+        override fun FSPEntityConstructDispatcher<Char>.initialize(): FSPValue<Factor> {
             '('.queue()
             ')'.queue()
 

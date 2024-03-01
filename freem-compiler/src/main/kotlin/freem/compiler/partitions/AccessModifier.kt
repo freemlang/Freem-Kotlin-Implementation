@@ -1,6 +1,6 @@
 package freem.compiler.partitions
 
-import libfsp.components.contexts.FSPComponentListConstructDispatcher
+import libfsp.components.contexts.FSPEntityConstructDispatcher
 import libfsp.reference.FSPValue
 
 enum class AccessModifier {
@@ -10,7 +10,7 @@ enum class AccessModifier {
     INTERNAL
     ;
     companion object: FSPTypedComponent<Char, AccessModifier>() {
-        override fun FSPComponentListConstructDispatcher<Char>.initialize(): FSPValue<AccessModifier> {
+        override fun FSPEntityConstructDispatcher<Char>.initialize(): FSPValue<AccessModifier> {
             val modifier by  switch<AccessModifier> {
                 "public".queue(PUBLIC)
                 "private".queue(PRIVATE)

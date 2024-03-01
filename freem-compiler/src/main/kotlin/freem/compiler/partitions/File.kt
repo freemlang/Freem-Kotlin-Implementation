@@ -1,6 +1,6 @@
 package freem.compiler.partitions
 
-import libfsp.components.contexts.FSPComponentListConstructDispatcher
+import libfsp.components.contexts.FSPEntityConstructDispatcher
 import libfsp.reference.FSPValue
 
 class File private constructor(
@@ -10,7 +10,7 @@ class File private constructor(
     val classes: List<Class>
 ) {
     companion object: FSPTypedComponent<Char, File>() {
-        override fun FSPComponentListConstructDispatcher<Char>.initialize(): FSPValue<File> {
+        override fun FSPEntityConstructDispatcher<Char>.initialize(): FSPValue<File> {
             `|?`
 
             "package".queue()

@@ -1,7 +1,6 @@
 package libfsp.components.contexts
 
 import libfsp.components.FSPComponent
-import libfsp.components.FSPGroup
 import libfsp.components.FSPLambdaTask
 import libfsp.reference.FSPReference
 import libfsp.reference.FSPReferenceDispatcher

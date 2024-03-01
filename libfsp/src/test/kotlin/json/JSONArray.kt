@@ -1,13 +1,12 @@
 package json
 
 import libfsp.components.FSPTypedComponent
-import libfsp.components.contexts.FSPComponentListConstructDispatcher
-import libfsp.components.fspnew
+import libfsp.components.contexts.FSPEntityConstructDispatcher
 import libfsp.reference.FSPValue
 
 class JSONArray(private val list: List<JSONValue>): JSONValue, List<JSONValue> by list {
     companion object: FSPTypedComponent<Char, JSONArray>() {
-        override fun FSPComponentListConstructDispatcher<Char>.initialize(): FSPValue<JSONArray> {
+        override fun FSPEntityConstructDispatcher<Char>.initialize(): FSPValue<JSONArray> {
             '['.queue()
             space
             val firstItem by JSONValue.optional().queue()

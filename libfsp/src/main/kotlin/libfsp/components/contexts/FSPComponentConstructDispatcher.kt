@@ -31,12 +31,12 @@ open class FSPComponentConstructDispatcher<Type> internal constructor() {
 
     context(FSPComponentConstructDispatcher<Type>)
     @OptIn(ExperimentalContracts::class)
-    fun group(constructor: context(FSPComponentListConstructDispatcher<Type>) () -> Unit): FSPGroup<Type, List<Type>> {
+    fun group(constructor: context(FSPEntityConstructDispatcher<Type>) () -> Unit): FSPGroup<Type, List<Type>> {
         contract { callsInPlace(constructor, InvocationKind.EXACTLY_ONCE) }
         val components = mutableListOf<FSPComponent<Type, *>>()
-        val dispatcher = FSPComponentListConstructDispatcher(components)
+        val dispatcher = FSPEntityConstructDispatcher(components)
         constructor(dispatcher)
-        val fixedDispatcher = FSPComponentListConstructDispatcher.combineConsecutiveConstants(components)
+        val fixedDispatcher = FSPEntityConstructDispatcher.combineConsecutiveConstants(components)
         components.clear()
         return FSPGroup(fixedDispatcher)
     }
@@ -45,12 +45,12 @@ open class FSPComponentConstructDispatcher<Type> internal constructor() {
     @OptIn(ExperimentalContracts::class)
     @Suppress("INAPPLICABLE_JVM_NAME")
     @JvmName("valueGroup")
-    fun <Return> group(constructor: context(FSPComponentListConstructDispatcher<Type>) () -> FSPValue<Return>): FSPGroup<Type, Return> {
+    fun <Return> group(constructor: context(FSPEntityConstructDispatcher<Type>) () -> FSPValue<Return>): FSPGroup<Type, Return> {
         contract { callsInPlace(constructor, InvocationKind.EXACTLY_ONCE) }
         val components = mutableListOf<FSPComponent<Type, *>>()
-        val dispatcher = FSPComponentListConstructDispatcher(components)
+        val dispatcher = FSPEntityConstructDispatcher(components)
         val returnedValue = constructor(dispatcher)
-        val fixedDispatcher = FSPComponentListConstructDispatcher.combineConsecutiveConstants(components)
+        val fixedDispatcher = FSPEntityConstructDispatcher.combineConsecutiveConstants(components)
         components.clear()
         return FSPGroup(fixedDispatcher)
     }
@@ -96,10 +96,10 @@ open class FSPComponentConstructDispatcher<Type> internal constructor() {
 
     context(FSPComponentConstructDispatcher<Type>)
     @OptIn(ExperimentalContracts::class)
-    fun switch(constructor: context(FSPComponentListConstructDispatcher<Type>) () -> Unit): FSPSwitch<Type, List<Type>> {
+    fun switch(constructor: context(FSPEntityConstructDispatcher<Type>) () -> Unit): FSPSwitch<Type, List<Type>> {
         contract { callsInPlace(constructor, InvocationKind.EXACTLY_ONCE) }
         val components = mutableListOf<FSPComponent<Type, *>>()
-        val dispatcher = FSPComponentListConstructDispatcher(components)
+        val dispatcher = FSPEntityConstructDispatcher(components)
         constructor(dispatcher)
         return FSPSwitch(components.map { it to (null as FSPValue<List<Type>> /*TODO: component's return value*/) })
     }

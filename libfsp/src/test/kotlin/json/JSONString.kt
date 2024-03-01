@@ -1,13 +1,13 @@
 package json
 
 import libfsp.components.FSPTypedComponent
-import libfsp.components.contexts.FSPComponentListConstructDispatcher
+import libfsp.components.contexts.FSPEntityConstructDispatcher
 import libfsp.components.contexts.asString
 import libfsp.reference.FSPValue
 
 class JSONString private constructor(internal val string: String): JSONValue {
     companion object: FSPTypedComponent<Char, JSONString>() {
-        override fun FSPComponentListConstructDispatcher<Char>.initialize(): FSPValue<JSONString> {
+        override fun FSPEntityConstructDispatcher<Char>.initialize(): FSPValue<JSONString> {
             '"'.queue()
             val charList by switch<Char> {
                 judge { it != '\n' && it != '\\' }.autoQueue()

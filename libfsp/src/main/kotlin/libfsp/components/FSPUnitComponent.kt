@@ -1,16 +1,16 @@
 package libfsp.components
 
-import libfsp.components.contexts.FSPComponentListConstructDispatcher
+import libfsp.components.contexts.FSPEntityConstructDispatcher
 import libfsp.reference.FSPUnit
 import libfsp.reference.FSPValue
 import java.util.*
 
 abstract class FSPUnitComponent<Type>: FSPComponent<Type, Unit>() {
-    protected abstract fun FSPComponentListConstructDispatcher<Type>.initialize()
+    protected abstract fun FSPEntityConstructDispatcher<Type>.initialize()
 
     internal val component: FSPComponent<Type, Unit> by lazy {
         val components = LinkedList<FSPComponent<Type, *>>()
-        val dispatcher = FSPComponentListConstructDispatcher(components)
+        val dispatcher = FSPEntityConstructDispatcher(components)
         dispatcher.initialize()
         val component = when (components.size) {
             0 -> throw IllegalStateException("component cannot be empty")
