@@ -1,10 +1,11 @@
 package libfsp.components
 
+import libfsp.reference.FSPReferenceDispatcher
 import libfsp.reference.FSPValue
 import java.util.*
 
 sealed class FSPComponent<out Type, Return> {
-    internal abstract fun run(input: List<@UnsafeVariance Type>): Int
+    internal abstract fun FSPAnalyzeDispatcher<@UnsafeVariance Type>.run()
 
     internal companion object {
         operator fun <Type, Return> invoke(entities: List<FSPEntity<Type, *>>, returnValue: FSPValue<Return>): FSPComponent<Type, Return> {
@@ -42,17 +43,11 @@ sealed class FSPComponent<out Type, Return> {
     }
 }
 
-private class FSPGroup<Type, Return>(
-    val entities: List<FSPEntity<Type, *>>,
-    val returnValue: FSPValue<Return>
-): FSPComponent<Type, Return>() {
-    override fun run(input: List<Type>): Int {
-        TODO("Not yet implemented")
-    }
-}
-
 private class FSPConstant<Type>(private val content: List<Type>): FSPComponent<Type, List<Type>>() {
-    override fun run(input: List<Type>): Int {
-        TODO("Not yet implemented")
+    override fun FSPAnalyzeDispatcher<Type>.run() {
+        for (item in content) {
+            if (item != input[index]) throwInvalid()
+            index++
+        }
     }
 }
