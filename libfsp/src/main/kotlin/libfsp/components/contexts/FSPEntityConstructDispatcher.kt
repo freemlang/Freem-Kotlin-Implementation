@@ -3,6 +3,7 @@ package libfsp.components.contexts
 import libfsp.components.FSPComponent
 import libfsp.components.FSPEntity
 import libfsp.components.FSPLambdaTask
+import libfsp.components.FSPTask
 import libfsp.reference.*
 import java.util.LinkedList
 import kotlin.reflect.KProperty
@@ -10,35 +11,36 @@ import kotlin.reflect.KProperty
 class FSPEntityConstructDispatcher<Type> private constructor(): FSPComponentConstructDispatcher<Type>() {
 
     companion object {
-        internal fun <Type, Return> createEntity(constructor: context(FSPEntityConstructDispatcher<Type>) () -> Unit): FSPEntity<Type, Return> {
+        internal fun <Type> createEntity(constructor: context(FSPEntityConstructDispatcher<Type>) () -> Unit): FSPEntity<Type, Unit> {
             val dispatcher = FSPEntityConstructDispatcher<Type>()
-
+            constructor(dispatcher)
+            val entities = dispatcher.entityBuffer + dispatcher.memoryReleaseEntityBuffer
+            return FSPEntity(FSPComponent(entities, FSPUnit), null)
         }
     }
 
-    private val componentBuffer = LinkedList<FSPComponent<Type, *>>()
+    private val entityBuffer = LinkedList<FSPEntity<Type, *>>()
+    private val memoryReleaseEntityBuffer = LinkedList<FSPEntity<Type, Unit>>()
 
     context(FSPEntityConstructDispatcher<Type>)
-    fun <Return> FSPComponent<Type, Return>.queue(lazyErrorMessage: (context(FSPReferenceDispatcher) () -> String)? = null): FSPValueDelegate<Type, Return> {
-        if (lazyErrorMessage != null) {
-            componentBuffer
-        }
+    fun <Return> FSPComponent<Type, Return>.queue(lazyErrorMessage: (context(FSPReferenceAccessDispatcher) () -> String)? = null): FSPValueDelegate<Type, Return> {
+        entityBuffer.add(FSPEntity(this, lazyErrorMessage))
         return TODO()
     }
 
     context(FSPEntityConstructDispatcher<Type>)
-    fun Type.queue(lazyErrorMessage: (context(FSPReferenceDispatcher) () -> String)? = null): FSPValueDelegate<Type, List<Type>> {
+    fun Type.queue(lazyErrorMessage: (context(FSPReferenceAccessDispatcher) () -> String)? = null): FSPValueDelegate<Type, List<Type>> {
         return const(this).queue(lazyErrorMessage)
     }
 
     context(FSPEntityConstructDispatcher<Char>)
-    fun String.queue(lazyErrorMessage: (context(FSPReferenceDispatcher) () -> String)? = null): FSPValueDelegate<Char, List<Char>> {
+    fun String.queue(lazyErrorMessage: (context(FSPReferenceAccessDispatcher) () -> String)? = null): FSPValueDelegate<Char, List<Char>> {
         return const(this).queue(lazyErrorMessage)
     }
 
     context(FSPEntityConstructDispatcher<Type>)
-    fun task(task: context(FSPReferenceDispatcher) () -> Unit) {
-        entities.add(
+    fun task(task: context(FSPReferenceAccessDispatcher) () -> Unit) {
+        entityBuffer.add(
             FSPEntity(
                 FSPLambdaTask { _, dispatcher ->
                     task(dispatcher)
@@ -48,21 +50,28 @@ class FSPEntityConstructDispatcher<Type> private constructor(): FSPComponentCons
     }
 
     context(FSPComponentConstructDispatcher<Type>)
-    fun <Value> value(initializer: context(FSPReferenceDispatcher) () -> Value): FSPValue<Value> {
+    fun <Value> value(initializer: context(FSPReferenceAccessDispatcher) () -> Value): FSPValue<Value> {
         return newReference(initializer)
     }
 
     context(FSPComponentConstructDispatcher<Type>)
-    fun <Variance> variance(initializer: context(FSPReferenceDispatcher) () -> Variance): FSPVariance<Variance> {
+    fun <Variance> variance(initializer: context(FSPReferenceAccessDispatcher) () -> Variance): FSPVariance<Variance> {
         return newReference(initializer)
     }
 
-    private fun <Type> newReference(initializer: context(FSPReferenceDispatcher) () -> Type): FSPReference<Type> {
-        val reference = FSPReference<Type>()
-        entities.add(
+    private fun <RefType> newReference(initializer: context(FSPReferenceAccessDispatcher) () -> RefType): FSPReference<RefType> {
+        val reference = FSPReference<RefType>()
+        entityBuffer.add(
             FSPEntity(
                 FSPLambdaTask { uuid, dispatcher ->
-                    reference.register(uuid, initializer(dispatcher))
+                    reference.enable(uuid, initializer(dispatcher))
+                }, null
+            )
+        )
+        memoryReleaseEntityBuffer.add(
+            FSPEntity(
+                FSPLambdaTask { uuid, _ ->
+                    reference.disable(uuid)
                 }, null
             )
         )

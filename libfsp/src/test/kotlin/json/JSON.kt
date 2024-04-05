@@ -1,9 +1,9 @@
 package json
 
-import libfsp.FSPComponentExecutor
+import libfsp.FreeStyleParser
 
 object JSON {
-    private val analyzer = FSPComponentExecutor(JSONValue)
+    private val analyzer = FreeStyleParser(JSONValue)
     fun parse(input: String): JSONValue? {
         val jsonValue = analyzer.execute(input.toCharArray().toTypedArray())
         return if (jsonValue == JSONNull) null else jsonValue

@@ -3,7 +3,7 @@ package libfsp.components.contexts
 import libfsp.components.FSPComponent
 import libfsp.components.FSPLambdaTask
 import libfsp.reference.FSPReference
-import libfsp.reference.FSPReferenceDispatcher
+import libfsp.reference.FSPReferenceAccessDispatcher
 
 class FSPTypedSwitchConstructDispatcher<Type, Return> internal constructor(
     private val components: MutableList<FSPComponent<Type, Return>>
@@ -15,10 +15,10 @@ class FSPTypedSwitchConstructDispatcher<Type, Return> internal constructor(
     ) {
         val returnReference = FSPReference<Return>()
         components.add(
-            FSPGroup(
+            FSPComponent.invoke(
                 listOf(
                     FSPLambdaTask { uuid, _ ->
-                        returnReference.register(uuid, `return`)
+                        returnReference.enable(uuid, `return`)
                     },
                     this
                 ),
@@ -44,22 +44,22 @@ class FSPTypedSwitchConstructDispatcher<Type, Return> internal constructor(
 
     context(FSPTypedSwitchConstructDispatcher<Type, Return>)
     fun <Return, ComponentReturn> FSPComponent<Type, ComponentReturn>.queue(
-        getter: context(FSPReferenceDispatcher) (FSPValueDelegate<Type, ComponentReturn>) -> Return
+        getter: context(FSPReferenceAccessDispatcher) (FSPValueDelegate<Type, ComponentReturn>) -> Return
     ) { TODO() }
 
     context(FSPTypedSwitchConstructDispatcher<Type, Return>)
     fun ((Type) -> Boolean).queue(
-        getter: context(FSPReferenceDispatcher) (FSPValueDelegate<Type, Type>) -> Return
+        getter: context(FSPReferenceAccessDispatcher) (FSPValueDelegate<Type, Type>) -> Return
     ) { judge(this).queue(getter) }
 
     context(FSPTypedSwitchConstructDispatcher<Type, Return>)
     fun Type.queue(
-        getter: context(FSPReferenceDispatcher) (FSPValueDelegate<Type, List<Type>>) -> Return
+        getter: context(FSPReferenceAccessDispatcher) (FSPValueDelegate<Type, List<Type>>) -> Return
     ) { const(this).queue(getter) }
 
     context(FSPTypedSwitchConstructDispatcher<Char, Return>)
     fun String.queue(
-        getter: context(FSPReferenceDispatcher) (FSPValueDelegate<Char, List<Char>>) -> Return
+        getter: context(FSPReferenceAccessDispatcher) (FSPValueDelegate<Char, List<Char>>) -> Return
     ) { const(this).queue(getter) }
 
     context(FSPTypedSwitchConstructDispatcher<Type, Return>)
