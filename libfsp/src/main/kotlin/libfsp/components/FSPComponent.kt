@@ -13,8 +13,6 @@ sealed class FSPComponent<out Type, Return> {
         operator fun <Type> invoke(content: List<Type>): FSPComponent<Type, List<Type>> {
             return FSPConstant(content)
         }
-
-        operator fun <Type> invoke()
     }
 }
 
