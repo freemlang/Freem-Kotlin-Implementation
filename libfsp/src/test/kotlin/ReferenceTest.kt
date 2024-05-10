@@ -1,5 +1,5 @@
-import libfsp.reference.ImmutableReference
-import libfsp.reference.MutableReference
+import libfsp.reference.ValueReference
+import libfsp.reference.VarianceReference
 import libfsp.reference.ReferenceAccessibleScope
 import java.util.UUID
 
@@ -7,11 +7,11 @@ fun main() {
     val uuid = UUID.randomUUID()
     val scope = ReferenceAccessibleScope(uuid)
 
-    val imutRef = ImmutableReference<String>()
-    val mutRef = MutableReference<Int>()
+    val imutRef = ValueReference<String>()
+    val mutRef = VarianceReference<Int>()
 
-    imutRef.new(uuid, "Hello, World!")
-    mutRef.new(uuid, 10)
+    imutRef.alloc(uuid) { "Hello, World!" }
+    mutRef.alloc(uuid) { 10 }
 
     with(scope) {
         val imutValue by imutRef

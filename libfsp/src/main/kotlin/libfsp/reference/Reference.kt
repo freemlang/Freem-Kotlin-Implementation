@@ -1,10 +1,7 @@
 package libfsp.reference
 
-import java.util.UUID
+import java.util.*
 
-abstract class Reference<Value> {
-    abstract fun new(uuid: UUID, value: Value)
-    abstract fun free(uuid: UUID)
-
-    abstract fun get(uuid: UUID): Value
+sealed class Reference<Value> {
+    internal abstract fun get(uuid: UUID): Value
 }
