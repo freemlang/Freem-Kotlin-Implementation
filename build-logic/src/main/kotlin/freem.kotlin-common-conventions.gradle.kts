@@ -1,4 +1,4 @@
-import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
@@ -20,13 +20,14 @@ testing {
     }
 }
 
+
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(20))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
-tasks.named("compileKotlin", org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask::class.java) {
+tasks.named<KotlinCompilationTask<*>>("compileKotlin").configure {
     compilerOptions {
         freeCompilerArgs.add("-Xcontext-receivers")
     }
