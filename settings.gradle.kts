@@ -1,15 +1,14 @@
-pluginManagement {
-    includeBuild("build-logic")
-}
-
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
-}
-
 rootProject.name = "freem"
 
 include(
-    "freem-compiler",
-    "libfsp",
-    "utilities"
+    "cli",
+    "compiler",
+    "parser",
 )
+
+pluginManagement {
+    includeBuild("build-logic")
+    plugins { kotlin("jvm") version "2.1.0" }
+}
+
+plugins { id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0" }

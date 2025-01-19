@@ -1,4 +1,5 @@
 .idea
+.builds
 .gradle
 .kotlin
 build
