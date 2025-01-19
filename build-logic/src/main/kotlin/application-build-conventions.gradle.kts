@@ -1,4 +1,4 @@
 plugins {
-  id("shared-build-conventions")
-  application
+    id("shared-build-conventions")
+    application
 }
