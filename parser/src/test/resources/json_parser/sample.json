@@ -1,0 +1,36 @@
+{
+  "string": "Hello, World!",
+  "integer": 42,
+  "float": 3.14159,
+  "booleanTrue": true,
+  "booleanFalse": false,
+  "nullValue": null,
+  "array": [
+    1,
+    2,
+    3,
+    "apple",
+    true
+  ],
+  "object": {
+    "name": "Jane Doe",
+    "age": 28,
+    "isEmployee": true
+  },
+  "nestedObject": {
+    "id": 1,
+    "details": {
+      "address": "456 Elm St",
+      "city": "Sample City",
+      "zipCode": "98765"
+    }
+  },
+  "stringWithQuotes": "He said, \"Hello, World!\"",
+  "stringWithBackslash": "This is a backslash: \\",
+  "stringWithNewline": "Line 1\nLine 2",
+  "stringWithTab": "Column 1\tColumn 2",
+  "stringWithCarriageReturn": "First Line\rSecond Line",
+  "stringWithUnicode": "This is a smiley: \u263A",
+  "mixedEscape": "He said, \"I'm going to the \\ store.\"",
+  "escapedControlCharacters": "Tab\tNewline\nCarriage\rBackslash\\Quote\""
+}

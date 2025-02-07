@@ -5,4 +5,4 @@ dependencies {
     implementation(project(":compiler"))
 }
 
-application { mainClass = "mainKt" }
+application { mainClass = "MainKt" }

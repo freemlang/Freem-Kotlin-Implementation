@@ -4,6 +4,7 @@ include(
     "cli",
     "compiler",
     "parser",
+    "util",
 )
 
 pluginManagement {
