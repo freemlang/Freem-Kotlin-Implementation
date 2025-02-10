@@ -2,7 +2,6 @@ package json_parser
 
 import java.io.IOException
 import java.io.InputStreamReader
-import kotlinx.coroutines.yield
 
 fun main() {
     val path = "json_parser/sample.json"
@@ -30,10 +29,4 @@ fun main() {
     val string = StringBuilder()
     while (iterator.hasNext()) string.append(iterator.nextChar())
     println(string)
-}
-
-fun a(block: suspend () -> Unit) {}
-
-fun b() {
-    a { yield() }
 }

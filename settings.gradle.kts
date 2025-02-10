@@ -7,9 +7,6 @@ include(
     "util",
 )
 
-pluginManagement {
-    includeBuild("build-logic")
-    plugins { kotlin("jvm") version "2.1.0" }
-}
+pluginManagement { includeBuild("build-logic") }
 
 plugins { id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0" }
