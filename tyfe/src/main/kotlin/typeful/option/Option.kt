@@ -1,14 +1,14 @@
-package util.rusty.option
+package typeful.option
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import util.iterator.NoneIterator
-import util.iterator.SingleIterator
-import util.rusty.Panic
-import util.rusty.result.Err
-import util.rusty.result.Ok
-import util.rusty.result.Result
+import typeful.Panic
+import typeful.internal.NoneIterator
+import typeful.internal.SomeIterator
+import typeful.result.Err
+import typeful.result.Ok
+import typeful.result.Result
 
 @Suppress("NOTHING_TO_INLINE")
 @OptIn(ExperimentalContracts::class)
@@ -90,8 +90,8 @@ sealed class Option<out T> : Cloneable {
         return if (this is Some) Ok(value) else Err(err())
     }
 
-    inline fun iter(): Iterator<T> {
-        return if (this is Some) SingleIterator(value) else NoneIterator
+    fun iter(): Iterator<T> {
+        return if (this is Some) SomeIterator(value) else NoneIterator
     }
 
     inline fun filter(predicate: (T) -> Boolean): Option<T> {
@@ -134,35 +134,4 @@ sealed class Option<out T> : Cloneable {
     }
 
     abstract override fun clone(): Option<T>
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline fun <T, U> Option<Pair<T, U>>.unzip(): Pair<Option<T>, Option<U>> {
-    return if (this is Some) Pair(Some(value.first), Some(value.second)) else Pair(None, None)
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline fun <T> Option<Option<T>>.flatten(): Option<T> {
-    return if (this is Some) value else None
-}
-
-@Suppress("NOTHING_TO_INLINE")
-inline fun <T, E> Option<Result<T, E>>.transpose(): Result<Option<T>, E> {
-    if (this !is Some) return Ok(None)
-    return when (value) {
-        is Ok -> Ok(Some(value.result))
-        is Err -> Err(value.error)
-    }
-}
-
-data class Some<out T>(val value: T) : Option<T>() {
-    override fun clone(): Some<T> {
-        return Some(value)
-    }
-}
-
-data object None : Option<Nothing>() {
-    override fun clone(): None {
-        return None
-    }
 }

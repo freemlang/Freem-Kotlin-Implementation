@@ -1,6 +1,6 @@
-package util.iterator
+package typeful.internal
 
-class SingleIterator<T>(private val value: T) : Iterator<T> {
+internal class SomeIterator<T>(private val value: T) : Iterator<T> {
     private var consumed = false
 
     override fun next(): T {

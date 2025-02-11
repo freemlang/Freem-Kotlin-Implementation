@@ -4,7 +4,7 @@ include(
     "cli",
     "compiler",
     "parser",
-    "util",
+    "tyfe",
 )
 
 pluginManagement { includeBuild("build-logic") }

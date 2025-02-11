@@ -1,6 +1,6 @@
-package util.iterator
+package typeful.internal
 
-object NoneIterator : Iterator<Nothing> {
+internal object NoneIterator : Iterator<Nothing> {
     override fun next(): Nothing {
         throw IndexOutOfBoundsException()
     }

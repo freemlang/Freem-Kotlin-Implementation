@@ -1,5 +1,5 @@
 package parser
 
-sealed interface Context
-
-internal data object ContextObject : Context
+sealed class Context {
+    internal data object InternalObject : Context()
+}

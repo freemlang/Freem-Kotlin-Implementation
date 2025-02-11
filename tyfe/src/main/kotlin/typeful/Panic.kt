@@ -1,4 +1,4 @@
-package util.rusty
+package typeful
 
 class Panic(message: String?, cause: Throwable?) : Throwable(message, cause) {
     constructor(message: String?) : this(message, null)
