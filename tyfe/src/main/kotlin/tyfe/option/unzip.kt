@@ -1,4 +1,4 @@
-package typeful.option
+package tyfe.option
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun <T, U> Option<Pair<T, U>>.unzip(): Pair<Option<T>, Option<U>> {

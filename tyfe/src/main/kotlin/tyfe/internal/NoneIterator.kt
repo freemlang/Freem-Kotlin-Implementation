@@ -1,4 +1,4 @@
-package typeful.internal
+package tyfe.internal
 
 internal object NoneIterator : Iterator<Nothing> {
     override fun next(): Nothing {

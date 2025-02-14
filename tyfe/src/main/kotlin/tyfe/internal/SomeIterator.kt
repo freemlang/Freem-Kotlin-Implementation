@@ -1,4 +1,4 @@
-package typeful.internal
+package tyfe.internal
 
 internal class SomeIterator<T>(private val value: T) : Iterator<T> {
     private var consumed = false

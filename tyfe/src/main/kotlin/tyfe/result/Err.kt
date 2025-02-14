@@ -1,4 +1,4 @@
-package typeful.result
+package tyfe.result
 
 data class Err<out E>(val error: E) : Result<Nothing, E>() {
     override fun clone(): Err<E> {

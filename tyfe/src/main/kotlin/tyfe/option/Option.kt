@@ -1,14 +1,14 @@
-package typeful.option
+package tyfe.option
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import typeful.Panic
-import typeful.internal.NoneIterator
-import typeful.internal.SomeIterator
-import typeful.result.Err
-import typeful.result.Ok
-import typeful.result.Result
+import tyfe.Panic
+import tyfe.internal.NoneIterator
+import tyfe.internal.SomeIterator
+import tyfe.result.Err
+import tyfe.result.Ok
+import tyfe.result.Result
 
 @Suppress("NOTHING_TO_INLINE")
 @OptIn(ExperimentalContracts::class)

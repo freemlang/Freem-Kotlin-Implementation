@@ -1,4 +1,4 @@
-package typeful.option
+package tyfe.option
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun <T> Option<Option<T>>.flatten(): Option<T> {

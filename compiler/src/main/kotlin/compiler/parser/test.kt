@@ -3,7 +3,7 @@ package compiler.parser
 import parser.Context
 import parser.Parser
 import parser.State
-import typeful.option.Option
+import tyfe.option.Option
 
 class Test : Parser<Char, Unit> {
     override fun Context.next(input: Option<Char>): State<Char, Unit> {

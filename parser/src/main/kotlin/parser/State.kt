@@ -5,16 +5,11 @@ sealed interface State<out Input, out Output> {
 
     data class COMPLETE<out Output>(internal val output: Output) : State<Nothing, Output>
 
-    class REQUEST<out Input, out Output>
-    private constructor(
-        internal val requestArray: Array<out Parser<@UnsafeVariance Input, @UnsafeVariance Output>>
+    class REQUEST<out Input, out Output>(
+        internal val requests: Array<out Parser<@UnsafeVariance Input, @UnsafeVariance Output>>
     ) : State<Input, Output> {
-        companion object {
-            operator fun <Input, Output> invoke(
-                vararg requests: Parser<@UnsafeVariance Input, @UnsafeVariance Output>
-            ): REQUEST<Input, Output> {
-                return REQUEST(requests)
-            }
+        init {
+            require(requests.isNotEmpty()) { "The number of requests cannot be less than 1" }
         }
     }
 }

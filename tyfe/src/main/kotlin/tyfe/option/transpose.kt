@@ -1,8 +1,8 @@
-package typeful.option
+package tyfe.option
 
-import typeful.result.Err
-import typeful.result.Ok
-import typeful.result.Result
+import tyfe.result.Err
+import tyfe.result.Ok
+import tyfe.result.Result
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun <T, E> Option<Result<T, E>>.transpose(): Result<Option<T>, E> {
