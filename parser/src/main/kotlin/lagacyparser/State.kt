@@ -1,4 +1,4 @@
-package parser
+package lagacyparser
 
 sealed interface State<out Input, out Output> {
     data object ACCEPT : State<Nothing, Nothing>

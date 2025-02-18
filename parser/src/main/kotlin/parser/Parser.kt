@@ -1,7 +1,8 @@
 package parser
 
-import tyfe.option.Option
+import parser.context.Context
+import tyfe.result.Result
 
-fun interface Parser<out Input, out Output> {
-    fun Context.next(input: Option<@UnsafeVariance Input>): State<Input, Output>
+fun interface Parser<in Input, out Output, out Error> {
+    suspend fun Context<Input>.parse(): Result<Output, Error>
 }

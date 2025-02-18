@@ -1,49 +1,31 @@
 package parser
 
-import tyfe.option.None
-import tyfe.option.Option
-import tyfe.option.Some
+import kotlinx.coroutines.runBlocking
+import parser.context.SingleTaskContext
+import tyfe.result.Result
 
-fun <Input, Output> Parser<Input, Output>.parse(input: Iterator<Input>): ParseResult<Output> {
-    val queue = ArrayDeque<Parser<Input, Output>>()
-    queue.add(this)
-    while (true) {
-        val current: Option<Input> = if (input.hasNext()) Some(input.next()) else None
-        var index = 0
-        while (index < queue.size) {
-            val request = queue[index]
-            val context = Context.Instance
-            val state = with(request) { context.next(current) }
-            when (state) {
-                is State.ACCEPT -> {
-                    check(current.isNone()) { "Cannot accept `None` value" }
-                    continue
-                }
-                is State.REQUEST -> {
-                    queue.removeAt(index)
-                    index -= 1
-                    queue.addAll(state.requests)
-                }
-                is State.COMPLETE -> {
-                    queue.clear()
-                    return ParseResult(state.output, current.isNone())
-                }
-            }
-            index += 1
-        }
+fun <Input, Output, Error> Parser<Input, Output, Error>.parse(
+    iterator: Iterator<Input>
+): Result<Output, Error> {
+    return runBlocking {
+        val context = SingleTaskContext(iterator)
+        val result = context.parse()
+        return@runBlocking result
     }
 }
 
 @Suppress("NOTHING_TO_INLINE")
-inline fun <Input, Output> Parser<Input, Output>.parse(
-    input: Iterable<Input>
-): ParseResult<Output> {
-    val iterator = input.iterator()
+inline fun <Input, Output, Error> Parser<Input, Output, Error>.parse(
+    iterable: Iterable<Input>
+): Result<Output, Error> {
+    val iterator = iterable.iterator()
     return parse(iterator)
 }
 
 @Suppress("NOTHING_TO_INLINE")
-inline fun <Output> Parser<Char, Output>.parse(input: String): ParseResult<Output> {
-    val iterator = input.iterator()
+inline fun <Output, Error> Parser<Char, Output, Error>.parse(
+    string: String
+): Result<Output, Error> {
+    val iterator = string.iterator()
     return parse(iterator)
 }

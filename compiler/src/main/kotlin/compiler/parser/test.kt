@@ -1,8 +1,8 @@
 package compiler.parser
 
-import parser.Context
-import parser.Parser
-import parser.State
+import lagacyparser.Context
+import lagacyparser.Parser
+import lagacyparser.State
 import tyfe.option.Option
 
 class Test : Parser<Char, Unit> {

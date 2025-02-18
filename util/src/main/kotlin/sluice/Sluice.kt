@@ -18,15 +18,8 @@ class Sluice {
         continuation!!.resume(Unit)
     }
 
-    suspend fun tryClose(): Boolean {
-        if (continuation !== null) return false
-        suspendCoroutine { continuation -> this.continuation = continuation }
-        return true
-    }
-
     fun tryOpen(): Boolean {
-        val continuation = continuation
-        if (continuation == null) return false
+        val continuation = continuation ?: return false
         continuation.resume(Unit)
         return true
     }
