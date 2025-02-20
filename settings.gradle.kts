@@ -1,12 +1,6 @@
-rootProject.name = "freem"
+rootProject.name = "project-fr"
 
-include(
-    "cli",
-    "compiler",
-    "parser",
-    "tyfe",
-    "util",
-)
+include("cli", "compiler", "parser", "tyfe", "util")
 
 pluginManagement { includeBuild("build-logic") }
 
