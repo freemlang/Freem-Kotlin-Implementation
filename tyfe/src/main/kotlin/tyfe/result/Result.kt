@@ -13,48 +13,36 @@ import tyfe.option.Some
 @Suppress("NOTHING_TO_INLINE")
 @OptIn(ExperimentalContracts::class)
 sealed class Result<out T, out E> : Cloneable {
-    inline fun isOk(): Boolean {
-        contract {
-            returns(true) implies (this@Result is Ok)
-            returns(false) implies (this@Result is Err)
-        }
-        return this is Ok
-    }
-
-    inline fun isOkAnd(f: (T) -> Boolean): Boolean {
-        contract { callsInPlace(f, InvocationKind.AT_MOST_ONCE) }
-        return this is Ok && f(result)
-    }
-
-    inline fun isErr(): Boolean {
-        contract {
-            returns(true) implies (this@Result is Err)
-            returns(false) implies (this@Result is Ok)
-        }
-        return this is Err
-    }
-
-    inline fun isErrAnd(f: (E) -> Boolean): Boolean {
-        contract { callsInPlace(f, InvocationKind.AT_MOST_ONCE) }
-        return this is Err && f(error)
-    }
-
     inline fun expect(msg: String): T {
+        contract { returns() implies (this@Result is Ok) }
         return if (this is Ok) result else throw Panic(msg)
     }
 
     inline fun expect(f: (E) -> String): T {
-        contract { callsInPlace(f, InvocationKind.AT_MOST_ONCE) }
-        return if (this.isOk()) result else throw Panic(f(error))
+        contract {
+            returns() implies (this@Result is Ok)
+            callsInPlace(f, InvocationKind.AT_MOST_ONCE)
+        }
+        when (this) {
+            is Ok -> return result
+            is Err -> throw Panic(f(error))
+        }
     }
 
     inline fun expectErr(msg: String): E {
+        contract { returns() implies (this@Result is Err) }
         return if (this is Err) error else throw Panic(msg)
     }
 
     inline fun expectErr(f: (T) -> String): E {
-        contract { callsInPlace(f, InvocationKind.AT_MOST_ONCE) }
-        return if (this.isErr()) error else throw Panic(f(result))
+        contract {
+            returns() implies (this@Result is Err)
+            callsInPlace(f, InvocationKind.AT_MOST_ONCE)
+        }
+        when (this) {
+            is Err -> return error
+            is Ok -> throw Panic(f(result))
+        }
     }
 
     inline fun inspect(f: (T) -> Unit): Result<T, E> {
@@ -70,6 +58,7 @@ sealed class Result<out T, out E> : Cloneable {
     }
 
     inline fun unwrap(): T {
+        contract { returns() implies (this@Result is Ok) }
         return if (this is Ok) result else throw Panic("called `Result::unwrap()` on a `Err` value")
     }
 
@@ -83,6 +72,7 @@ sealed class Result<out T, out E> : Cloneable {
     }
 
     inline fun unwrapErr(): E {
+        contract { returns() implies (this@Result is Err) }
         return if (this is Err) error
         else throw Panic("called `Result::unwrapErr()` on a `Ok` value")
     }
@@ -98,7 +88,10 @@ sealed class Result<out T, out E> : Cloneable {
 
     inline fun <U> map(op: (T) -> U): Result<U, E> {
         contract { callsInPlace(op, InvocationKind.AT_MOST_ONCE) }
-        return if (this.isOk()) Ok(op(result)) else Err(error)
+        return when (this) {
+            is Ok -> Ok(op(result))
+            is Err -> Err(error)
+        }
     }
 
     inline fun <U> map(default: U, f: (T) -> U): U {
@@ -116,12 +109,15 @@ sealed class Result<out T, out E> : Cloneable {
 
     inline fun <F> mapErr(op: (E) -> F): Result<T, F> {
         contract { callsInPlace(op, InvocationKind.AT_MOST_ONCE) }
-        return if (this.isErr()) Err(op(error)) else Ok(result)
+        return when (this) {
+            is Err -> Err(op(error))
+            is Ok -> Ok(result)
+        }
     }
 
     inline fun <F> mapErr(default: F, f: (E) -> F): F {
         contract { callsInPlace(f, InvocationKind.AT_MOST_ONCE) }
-        return if (this.isErr()) f(error) else default
+        return if (this is Err) f(error) else default
     }
 
     inline fun <F> mapErr(default: () -> F, f: (E) -> F): F {
@@ -129,7 +125,7 @@ sealed class Result<out T, out E> : Cloneable {
             callsInPlace(default, InvocationKind.AT_MOST_ONCE)
             callsInPlace(f, InvocationKind.AT_MOST_ONCE)
         }
-        return if (this.isErr()) f(error) else default()
+        return if (this is Err) f(error) else default()
     }
 
     inline fun ok(): Option<T> {
@@ -149,21 +145,21 @@ sealed class Result<out T, out E> : Cloneable {
     }
 
     inline infix fun <U> and(res: Result<U, @UnsafeVariance E>): Result<U, E> {
-        return if (this.isOk()) res else this
+        return if (this !is Err) res else this
     }
 
     inline infix fun <U> and(op: () -> Result<U, @UnsafeVariance E>): Result<U, E> {
         contract { callsInPlace(op, InvocationKind.AT_MOST_ONCE) }
-        return if (this.isOk()) op() else this
+        return if (this !is Err) op() else this
     }
 
     inline infix fun <F> or(res: Result<@UnsafeVariance T, F>): Result<T, F> {
-        return if (this.isErr()) res else this
+        return if (this !is Ok) res else this
     }
 
     inline infix fun <F> or(op: () -> Result<@UnsafeVariance T, F>): Result<T, F> {
         contract { callsInPlace(op, InvocationKind.AT_MOST_ONCE) }
-        return if (this.isErr()) op() else this
+        return if (this !is Ok) op() else this
     }
 
     abstract override fun clone(): Result<T, E>

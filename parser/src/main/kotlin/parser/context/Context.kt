@@ -1,10 +1,12 @@
 package parser.context
 
+import coroutines.sluice.ListedSluice
+import coroutines.sluice.Sluice
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import parser.Parser
-import sluice.Sluice
 import tyfe.option.Option
 import tyfe.option.Some
 
@@ -35,24 +37,33 @@ internal constructor(
         }
     }
 
-    suspend fun useBranch(vararg branches: Branch<Input, *>) {
-        val centralSluice = CentralSluice(branches.size.toUInt())
-        val inputBox = InputBox<Input>()
-        val jobs =
-            branches.map { branch ->
-                val parser = branch.parser
-                val taskSluice = Sluice()
-                val provider = SubInputProvider(taskSluice, centralSluice, inputBox)
-                val job =
-                    coroutineScope.launch {
-                        val coroutineScope = this@launch
-                        val context = Context(coroutineScope, provider)
-                        // unsmart smartcast
-                        branch.output = Some(with(parser) { context.parse() }) as Nothing
-                        centralSluice.requiredAmount -= 1u
-                    }
-                Pair(taskSluice, job)
+    /** helper function for useBranch */
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun <Output> branchMapper(
+        branch: Branch<Input, Output>,
+        inputBox: InputBox<Input>,
+        centralSluice: ListedSluice,
+    ): Pair<Sluice, Job> {
+        val parser = branch.parser
+        val taskSluice = Sluice()
+        val provider = SubInputProvider(taskSluice, centralSluice, inputBox)
+        val job =
+            coroutineScope.launch {
+                try {
+                    val coroutineScope = this@launch
+                    val context = Context(coroutineScope, provider)
+                    branch.output = Some(with(parser) { context.parse() })
+                } finally {
+                    centralSluice.open()
+                }
             }
+        return Pair(taskSluice, job)
+    }
+
+    suspend fun useBranch(vararg branches: Branch<Input, *>) {
+        val inputBox = InputBox<Input>()
+        val centralSluice = ListedSluice()
+        var tasks = branches.map { branch -> branchMapper(branch, inputBox, centralSluice) }
         val processor = coroutineScope.launch { while (true) {} }
     }
 }

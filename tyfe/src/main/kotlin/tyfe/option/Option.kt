@@ -13,32 +13,6 @@ import tyfe.result.Result
 @Suppress("NOTHING_TO_INLINE")
 @OptIn(ExperimentalContracts::class)
 sealed class Option<out T> : Cloneable {
-    inline fun isSome(): Boolean {
-        contract {
-            returns(true) implies (this@Option is Some)
-            returns(false) implies (this@Option is None)
-        }
-        return this is Some
-    }
-
-    inline fun isSomeAnd(f: (T) -> Boolean): Boolean {
-        contract { callsInPlace(f, InvocationKind.AT_MOST_ONCE) }
-        return this is Some && f(value)
-    }
-
-    inline fun isNone(): Boolean {
-        contract {
-            returns(true) implies (this@Option is None)
-            returns(false) implies (this@Option is Some)
-        }
-        return this is None
-    }
-
-    inline fun isNoneOr(f: (T) -> Boolean): Boolean {
-        contract { callsInPlace(f, InvocationKind.AT_MOST_ONCE) }
-        return this !is Some || f(value)
-    }
-
     inline fun expect(msg: String): T {
         return if (this is Some) value else throw Panic(msg)
     }
@@ -50,6 +24,7 @@ sealed class Option<out T> : Cloneable {
     }
 
     inline fun unwrap(): T {
+        contract { returns() implies (this@Option is Some) }
         return if (this is Some) value
         else throw Panic("called `Option::unwrap()` on a `None` value")
     }

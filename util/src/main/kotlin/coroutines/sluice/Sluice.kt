@@ -1,4 +1,4 @@
-package sluice
+package coroutines.sluice
 
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
